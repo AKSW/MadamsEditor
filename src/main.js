@@ -149,7 +149,7 @@ export default class MadamsEditor {
 
         let uploadId = document.querySelector("#nomadDataUploadId").value
         let calcId = document.querySelector("#nomadDataCalcId").value
-        const nomadUrl = `http://nomad-lab.eu/prod/rae/api/archive/${uploadId}/${calcId}`
+        const nomadUrl = `https://nomad-lab.eu/prod/rae/api/archive/${uploadId}/${calcId}`
         fetch(nomadUrl)
         .then(response => response.json())
         .then(data => {
