@@ -1,0 +1,28 @@
+{
+  "name": "es6-dev-env",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "babel-loader": "^8.2.1",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "@rmlio/yarrrml-parser": "^1.2.1",
+    "lodash": "^4.17.20",
+    "n3": "^1.6.4",
+    "rocketrml": "^1.8.2",
+    "yaml": "^1.10.0"
+  }
+}
