@@ -150,7 +150,9 @@ export default class MadamsEditor {
         let uploadId = document.querySelector("#nomadDataUploadId").value
         let calcId = document.querySelector("#nomadDataCalcId").value
         const nomadUrl = `https://nomad-lab.eu/prod/rae/api/archive/${uploadId}/${calcId}`
-        fetch(nomadUrl)
+        const proxy = 'https://thingproxy.freeboard.io/fetch/'
+        // https://thingproxy.freeboard.io/fetch/http://nomad-lab.eu/prod/rae/api/archive/PACv39BKSFKLtphwxzY-Og/baBkU4yx2wQ1WIQJxuEZhKWq02bS
+        fetch(proxy + nomadUrl)
         .then(response => {
             console.log('response', response);
             return response.json()
