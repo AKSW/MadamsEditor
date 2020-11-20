@@ -151,7 +151,10 @@ export default class MadamsEditor {
         let calcId = document.querySelector("#nomadDataCalcId").value
         const nomadUrl = `https://nomad-lab.eu/prod/rae/api/archive/${uploadId}/${calcId}`
         fetch(nomadUrl)
-        .then(response => response.json())
+        .then(response => {
+            console.log('response', response);
+            return response.json()
+        })
         .then(data => {
             self.jsonEditor.setValue(JSON.stringify(data, null, '\t'));
             self.jsonEditor.clearSelection();
