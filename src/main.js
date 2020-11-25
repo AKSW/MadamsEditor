@@ -130,6 +130,17 @@ export default class MadamsEditor {
         document.querySelector("#nomadDataUploadId").value = _GLOBAL.nomad.uploadId
         document.querySelector("#nomadDataCalcId").value = _GLOBAL.nomad.calcId
 
+        const nomadUrl = 'https://nomad-lab.eu/prod/rae/api/archive/PACv39BKSFKLtphwxzY-Og/baBkU4yx2wQ1WIQJxuEZhKWq02bS'
+
+        fetch(nomadUrl)
+        .then(response => response.json() )
+        .then(data => {
+        	console.log('data', data);
+        })
+        .catch(error => {
+            console.log('error', error);
+        });
+
 
         document.querySelector("#load-data").addEventListener("click", () => {
             self.fetchNomad()
@@ -150,12 +161,7 @@ export default class MadamsEditor {
         let uploadId = document.querySelector("#nomadDataUploadId").value
         let calcId = document.querySelector("#nomadDataCalcId").value
         const nomadUrl = `https://nomad-lab.eu/prod/rae/api/archive/${uploadId}/${calcId}`
-        fetch(nomadUrl, {
-            mode: 'cors',
-            headers: {
-                'Access-Control-Allow-Origin':'*'
-            }
-        })
+        fetch(nomadUrl)
         .then(response => response.json() )
         .then(data => {
             self.jsonEditor.setValue(JSON.stringify(data, null, '\t'));
