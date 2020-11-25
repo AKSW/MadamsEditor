@@ -165,7 +165,7 @@ export default class MadamsEditor {
         fetch(nomadUrl)
         .then(response => response.json() )
         .then(data => {
-            console.log('data', data);
+            // console.log('data', data);
             self.jsonEditor.setValue(JSON.stringify(data, null, '\t'));
             self.jsonEditor.clearSelection();
             // editor.getSession().foldAll(4);
