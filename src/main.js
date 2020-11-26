@@ -114,15 +114,15 @@ export default class MadamsEditor {
         const self = this;
         this.yarrrmlEditor = ace.edit("yarrrml-editor")
         this.yarrrmlEditor.session.setMode("ace/mode/yaml")
-        this.yarrrmlEditor.setTheme("ace/theme/github")
+        this.yarrrmlEditor.setTheme("ace/theme/tomorrow")
 
         this.jsonEditor = ace.edit("json-editor")
-        this.jsonEditor.setTheme("ace/theme/github")
+        this.jsonEditor.setTheme("ace/theme/tomorrow")
         this.jsonEditor.session.setMode("ace/mode/json")
         this.jsonEditor.setReadOnly(true);  // false to make it editable
 
         this.outEditor = ace.edit("out-editor")
-        this.outEditor.setTheme("ace/theme/github")
+        this.outEditor.setTheme("ace/theme/tomorrow")
         this.outEditor.session.setMode("ace/mode/turtle")
         this.outEditor.setReadOnly(true);  // false to make it editable
 
@@ -131,50 +131,74 @@ export default class MadamsEditor {
         document.querySelector("#nomadDataCalcId").value = _GLOBAL.nomad.calcId
 
         document.querySelector("#load-data").addEventListener("click", (e) => {
+            const btn = e.target;
+            btn.setAttribute("disabled", "disabled");
+            btn.querySelector(".loader").classList.remove("d-none");
+
             self.fetchNomad()
-            document.querySelector("#convert-btn").classList.remove("invisible")
+            .then(result => {})
+            .catch(e => {})
+            .finally(result => {
+                btn.removeAttribute("disabled");
+                btn.querySelector(".loader").classList.add("d-none");
+            })
             e.preventDefault();
         })
 
         document.querySelector("#convert-btn").addEventListener("click", (e) => {
+            const btn = e.target;
             const quads = self.yarrrml2RML()
             if (!quads) return;
-            self.runRmlMapper(quads);
+
+            btn.classList.add('disabled')
+            btn.querySelector(".loader").classList.remove("d-none");
+            btn.querySelector(".bi").classList.add("d-none");
+
+            self.runRmlMapper(quads)
+            .then(result => {})
+            .catch(e => {})
+            .finally(result => {
+                btn.classList.remove('disabled')
+                btn.querySelector(".loader").classList.add("d-none");
+                btn.querySelector(".bi").classList.remove("d-none");
+            })
             e.preventDefault();
         })
     }
 
     fetchNomad() {
         const self = this;
-
         let uploadId = document.querySelector("#nomadDataUploadId").value
         let calcId = document.querySelector("#nomadDataCalcId").value
         const nomadUrl = `https://nomad-lab.eu/prod/rae/api/archive/${uploadId}/${calcId}`
-        fetch(nomadUrl)
-        .then(response => response.json() )
-        .then(data => {
-            // console.log('data', data);
-            self.jsonEditor.setValue(JSON.stringify(data, null, '\t'));
-            self.jsonEditor.clearSelection();
-            // editor.getSession().foldAll(4);
-            // fold all at column X -> https://groups.google.com/g/ace-discuss/c/JfMdCm1K8Qc?pli=1
 
+        return new Promise((resolve, reject) => {
+            fetch(nomadUrl)
+            .then(response => response.json() )
+            .then(data => {
+                self.jsonEditor.setValue(JSON.stringify(data, null, '\t'));
+                self.jsonEditor.clearSelection();
+                // editor.getSession().foldAll(4);
+                // fold all at column X -> https://groups.google.com/g/ace-discuss/c/JfMdCm1K8Qc?pli=1
+                resolve(true);
+            })
+            .catch(error => {
+                self.addMessage('error', 'Fetch from Nomad failed. ' + error)
+                reject(false)
+            });
         })
-        .catch(error => {
-            console.log('error', error);
-        });
+
     }
-
-
 
     yarrrml2RML() {
         const yaml = this.yarrrmlEditor.getValue()
         const y2r = new yarrrml();
         let quads;
+        y2r.convert
         try {
             quads = y2r.convert(yaml)
         } catch (e) {
-            console.error('Error: generate the RML mapping from YARRRML failed.');
+            this.addMessage('error', 'Generate the RML mapping from YARRRML failed. ' + e);
             return null
         }
         return quads;
@@ -200,47 +224,58 @@ export default class MadamsEditor {
             }
         });
 
-        writer.end( (err,rmlDoc) => {
-            const inputData = self.jsonEditor.getValue();
+        return new Promise((resolve, reject) => {
+            writer.end( (err,rmlDoc) => {
+                const inputData = self.jsonEditor.getValue();
 
-            fetch("https://tw06v069.ugent.be/rmlmapper/execute", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    rml: rmlDoc,
-                    sources: {
-                        "data.json": inputData
-                    }
+                if (err) {
+                    self.addMessage('error', err)
+                    return reject(false);
+                }
+
+                fetch("https://tw06v069.ugent.be/rmlmapper/execute", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        rml: rmlDoc,
+                        sources: {
+                            "data.json": inputData
+                        }
+                    })
+                }).then(response=>{
+                    return response.json()
+                }).then(data=>{
+                    const parser = new N3.Parser();
+                    const prefixes = self.getUsedPrefixes();
+                    const outWriter = new N3.Writer({
+                        format: "turtle",
+                        prefixes: prefixes
+                    });
+                    parser.parse(data.output, (err, quad, prefixes) => {
+                        if (quad) {
+                            outWriter.addQuad(quad)
+                        } else {
+                            outWriter.end((err,outTtl)=>{
+                                document.querySelector("#out-wrapper").classList.remove("d-none")
+                                document.querySelector("#out-wrapper").scrollIntoView();
+                                self.outEditor.setValue(outTtl);
+                                self.outEditor.clearSelection();
+                            });
+                            resolve(true);
+                        }
+                    })
+                }).catch(err=>{
+                    self.addMessage('error', 'RML mapper failed. ' + err);
+                    reject(false);
                 })
-            }).then(response=>{
-                return response.json()
-            }).then(data=>{
-                const parser = new N3.Parser();
-                const prefixes = self.getUsedPrefixes();
-                const outWriter = new N3.Writer({
-                    format: "turtle",
-                    prefixes: prefixes
-                });
-                parser.parse(data.output, (err, quad, prefixes) => {
-                    if (quad) {
-                        outWriter.addQuad(quad)
-                    } else {
-                        outWriter.end((err,outTtl)=>{
-                            document.querySelector("#out-wrapper").classList.remove("d-none")
-                            document.querySelector("#out-wrapper").scrollIntoView();
-                            self.outEditor.setValue(outTtl);
-                        });
-                    }
-                })
-            }).catch(err=>{
-                console.log('error', err);
-            })
-        });
+            });
+        })
     }
 
     getUsedPrefixes() {
+        const self = this;
         const yaml = this.yarrrmlEditor.getValue()
         let prefixes = {};
         prefixes.rdf = _GLOBAL.prefixes.rdf;
@@ -255,9 +290,34 @@ export default class MadamsEditor {
                 prefixes = Object.assign({}, prefixes, json.prefixes)
             }
         } catch (e) {
-            console.log('error', e);
+            self.addMessage('error', e);
         }
         return prefixes
+    }
+
+    addMessage(type, message) {
+        console.log(type, message);
+        const wrapper = document.querySelector("#messages-wrapper");
+        const closeBtn = '<button type="button" class="close ml-2" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+        const alertEl = $('<div class="alert" role="alert">' + message + closeBtn + '</div>');
+
+        switch (type) {
+            case 'error':
+                alertEl.addClass('alert-danger')
+                break;
+
+            case 'success':
+                alertEl.addClass('alert-success')
+                break;
+
+            default:
+                break;
+        }
+        $(wrapper).append(alertEl)
+    }
+
+    removeMessage() {
+
     }
 }
 
