@@ -1,9 +1,27 @@
 var path = require('path');
+var webpack = require('webpack');
 
-module.exports = {
+var config = {
   mode: 'development',
-  // entry: './src/main.js',
   entry: path.resolve(__dirname, './src/main.js'),
+  resolve: {
+    extensions: ['*', '.js']
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, './dist'),
+    // compress: true,
+    port: 8080,
+    injectClient: false
+  },
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: 'main.js',
+    publicPath: '/',
+    // library not working in dev mode
+    // see https://github.com/webpack/webpack-dev-server/issues/2484
+    library: 'MadamsEditor',
+    libraryTarget: 'var'
+  },
   module: {
     rules: [
       {
@@ -35,18 +53,6 @@ module.exports = {
 
     ]
   },
-  resolve: {
-    extensions: ['*', '.js']
-  },
-  devServer: {
-    contentBase: path.resolve(__dirname, './dist'),
-    // compress: true,
-    port: 8080
-  },
-  output: {
-    path: path.resolve(__dirname, './dist'),
-    filename: 'main.js',
-  },
   // node: {
   //   fs: 'empty'
   // }
@@ -59,7 +65,20 @@ module.exports = {
       util: false
     }
   }
-  // node: {
-  //   global: true
-  // }
+}
+
+
+
+module.exports = (env, argv ) => {
+
+  config.plugins = [
+    new webpack.DefinePlugin({
+      'process':  { 'env' : argv.mode === 'development'
+        ? JSON.stringify('development')
+        : JSON.stringify('production')
+      },
+    })
+  ];
+
+  return config;
 };

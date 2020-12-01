@@ -1,0 +1,74 @@
+#
+# Example mapping
+#
+prefixes:
+  stream: https://stream-projekt.net/
+  nomad: http://https://nomad-coe.eu/ontology#
+  mvc: http://stream-ontology.com/matvoc-core/
+  data: https://nomad-coe.eu/data/
+  metadata: https://nomad-coe.eu/metadata/
+  dcat: http://www.w3.org/ns/dcat#
+  oboe: http://ecoinformatics.org/oboe/oboe.1.2/oboe-core.owl#
+  grel: http://users.ugent.be/~bjdmeest/function/grel.ttl#
+
+mappings:
+
+  runs:
+    sources:
+      - ['data.json~jsonpath', '$']
+    s: # stream:$(section_run[0].program_name)
+      value: $(section_run[0])
+      type: blank
+    po:
+      - [a, mvc:Run]
+      - [mvc:resultsIn, data:$(section_metadata.pid)~iri]
+
+  dataset:
+    sources:
+      - ['data.json~jsonpath', '$']
+    s: data:$(section_metadata.pid)
+    po:
+      - [a, mvc:Dataset]
+      - [mvc:hasMetadata, metadata:$(section_metadata.pid)~iri]
+      - p: oboe:hasMeasurement
+        o:
+          # value: $(section_run[0].section_system[*])
+          value: links_to_measurements
+          type: blank
+
+  measurement:
+    sources:
+      - ['data.json~jsonpath', '$.section_run[*].section_system[*]']
+    s: # stream:$(section_run[0].program_name)
+      type: blank
+    po:
+      - [a, oboe:Measurement]
+
+
+  metadata:
+    sources:
+      - ['data.json~jsonpath', '$']
+    s: metadata:$(section_metadata.pid)
+    po:
+      - [a, dcat:Dataset]
+      - [rdfs:label, $(section_metadata.formula)]
+      # - [matvoc:formula, $(section_metadata.formula)]
+      # - p: matvoc:runsys
+      #   o:
+      #     value: $(section_run[0].section_system[*].configuration_raw_gid)
+      #     # type: blank
+      #     type: literal
+      # - p: matvoc:domain
+      #   o:
+      #     function: grel:toUpperCase
+      #     parameters:
+      #       - [grel:valueParameter, $(section_metadata.domain)]
+
+  # sectionSystem:
+  #   sources:
+  #     # todo: how to use IRI here
+  #     - ['data.json~jsonpath', '$.section_run[0].section_system[*]']
+  #   s: stream:run/system/$(configuration_raw_gid)/$(system_type)/$(is_representative)
+  #   po:
+  #     - [a, matvoc:RunSystem]
+  #     - [rdfs:label, $(configuration_raw_gid)]
