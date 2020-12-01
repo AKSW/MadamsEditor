@@ -6,8 +6,9 @@ const runMadamsEditor = (config) => {
     });
 }
 
-if (process.env === 'development') {
-    runMadamsEditor()
-}
+// if (process.env === 'development') {
+//     runMadamsEditor()
+// }
+runMadamsEditor()
 
 export default runMadamsEditor
