@@ -167,16 +167,21 @@ export default class MadamsEditor {
     }
 
     loadExampleData(url = "", target = null) {
+        const self = this;
 
         fetch(url)
-        .then(data => data.text())
+        .then(data => {
+            if (!data.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return data.text()
+        })
         .then(text => {
             target.setValue(text);
             target.clearSelection();
         })
         .catch(error => {
             self.addMessage('error', 'Fetch example data failed. ' + error)
-            reject(false)
         });
     }
 
@@ -188,7 +193,12 @@ export default class MadamsEditor {
 
         return new Promise((resolve, reject) => {
             fetch(nomadUrl)
-            .then(response => response.json() )
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json()
+            })
             .then(data => {
                 self.jsonEditor.setValue(JSON.stringify(data, null, '\t'));
                 self.jsonEditor.clearSelection();
@@ -208,7 +218,6 @@ export default class MadamsEditor {
         const yaml = this.yarrrmlEditor.getValue()
         const y2r = new yarrrml();
         let quads;
-        y2r.convert
         try {
             quads = y2r.convert(yaml)
         } catch (e) {
@@ -259,6 +268,9 @@ export default class MadamsEditor {
                         }
                     })
                 }).then(response=>{
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
                     return response.json()
                 }).then(data=>{
                     const parser = new N3.Parser();
