@@ -138,4 +138,4 @@ const e=require("prefix-ns").asMap(),s=require("./abstract-generator.js"),t=requ
 },{"@rmlio/yarrrml-parser/lib/rml-generator":"gRjw","n3":"UnzU"}],"A2T1":[function(require,module,exports) {
 "use strict";var e=t(require("./madamseditor"));function t(e){return e&&e.__esModule?e:{default:e}}const r=new e.default(meOptions);
 },{"./madamseditor":"hCoT"}]},{},["A2T1"], null)
-//# sourceMappingURL=/dist/app.7fe76a2a.js.map
+//# sourceMappingURL=app.7fe76a2a.js.map

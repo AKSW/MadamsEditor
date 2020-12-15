@@ -11,7 +11,7 @@
     "dev-app": "npm run pre:dev && parcel src/app.html --hmr-port 1235 --host 0.0.0.0 --out-file index.html --out-dir dist/dev",
     "app": "npm run build-app && tail -f /dev/null",
     "build": "npm run build-app",
-    "build-app": "parcel build src/app.html --out-file index.html --public-url /dist/",
+    "build-app": "rm -rf dist/index.* dist/app.* && parcel build src/app.html --out-file index.html --public-url ./",
     "server": "node src/server.js -w src/"
   },
   "keywords": [],
