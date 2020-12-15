@@ -10,7 +10,7 @@
     "dev-app": "rm -rf .cache/* && parcel src/app.html --hmr-port 1235 --host 0.0.0.0 --out-file index.html",
     "app": "npm run build-app && tail -f /dev/null",
     "build": "npm run build-app",
-    "build-app": "parcel build src/app.html --out-file index.html",
+    "build-app": "parcel build src/app.html --out-file index.html --public-url ./dist/",
     "server": "node src/server.js -w src/"
   },
   "keywords": [],
