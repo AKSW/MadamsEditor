@@ -69,6 +69,32 @@ let _GLOBAL = {
     }
 };
 
+export default class MadamsEditor {
+
+    constructor(config) {
+        if (_GLOBAL.instance) {
+            return _GLOBAL.instance;
+        }
+
+        this.config = config;
+        this.ui = new MadamsEditor_UI();
+        this.parser = new MadamsEditor_Parser();
+
+        this._init(config);
+        _GLOBAL.instance = this;
+    }
+
+    _init(config) {
+        const self = this;
+
+        Object.assign(_GLOBAL.config, _GLOBAL.config.defaults, config);
+        console.log('config', _GLOBAL.config);
+
+        this.ui.init(this);
+        this.parser.init(this);
+    }
+}
+
 class MadamsEditor_UI {
 
     init(parent) {
@@ -204,34 +230,6 @@ class MadamsEditor_UI {
         const wrapper = document.querySelector("#messages-wrapper");
         wrapper.innerHTML = "";
     }
-}
-
-export default class MadamsEditor {
-
-    constructor(config) {
-        if (_GLOBAL.instance) {
-            return _GLOBAL.instance;
-        }
-
-        this.config = config;
-        this.ui = new MadamsEditor_UI();
-        this.parser = new MadamsEditor_Parser();
-
-        this._init(config);
-        _GLOBAL.instance = this;
-    }
-
-    _init(config) {
-        const self = this;
-
-        Object.assign(_GLOBAL.config, _GLOBAL.config.defaults, config);
-        console.log('config', _GLOBAL.config);
-
-        this.ui.init(this);
-        this.parser.init(this);
-    }
-
-
 }
 
 class MadamsEditor_Parser {
@@ -458,6 +456,5 @@ class MadamsEditor_Parser {
         }
         return prefixes
     }
-
 
 }
