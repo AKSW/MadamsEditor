@@ -1,28 +1,30 @@
 {
-  "name": "es6-dev-env",
+  "name": "MadamsEditor-Final",
   "version": "1.0.0",
   "description": "",
-  "private": true,
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack serve --mode=development",
-    "build": "webpack"
+    "dev": "npm run dev-server & npm run dev-app",
+    "dev-server": "nodemon src/server.js -w src/",
+    "dev-app": "rm -rf .cache/* && parcel src/app.html --hmr-port 1235 --host 0.0.0.0 --out-file index.html",
+    "build": "npm run build-app",
+    "build-app": "parcel build src/app.html --out-file index.html"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/preset-env": "^7.12.1",
-    "babel-loader": "^8.2.1",
-    "webpack": "^5.4.0",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
-  },
   "dependencies": {
     "@rmlio/yarrrml-parser": "^1.2.1",
-    "lodash": "^4.17.20",
+    "express": "^4.17.1",
     "n3": "^1.6.4",
-    "rocketrml": "^1.8.2",
-    "yaml": "^1.10.0"
-  }
+    "rocketrml": "^1.8.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6",
+    "parcel-bundler": "^1.12.4"
+  },
+  "browserslist": [
+    "since 2017-06"
+  ]
 }
