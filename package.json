@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "pre:dev": "rm -rf dist/dev .cache/* && mkdir dist/dev && cp dist/*.yml dist/*.json dist/dev/",
     "dev": "npm run dev-server & npm run dev-app",
     "dev-server": "nodemon src/server.js -w src/",
-    "dev-app": "rm -rf .cache/* && parcel src/app.html --hmr-port 1235 --host 0.0.0.0 --out-file index.html",
+    "dev-app": "npm run pre:dev && parcel src/app.html --hmr-port 1235 --host 0.0.0.0 --out-file index.html --out-dir dist/dev",
     "app": "npm run build-app && tail -f /dev/null",
     "build": "npm run build-app",
-    "build-app": "parcel build src/app.html --out-file index.html --public-url ./dist/",
+    "build-app": "parcel build src/app.html --out-file index.html --public-url /dist/",
     "server": "node src/server.js -w src/"
   },
   "keywords": [],
