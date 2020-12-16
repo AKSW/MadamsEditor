@@ -48,10 +48,9 @@ app.post('/rmlmapper', async (req, res, next) => {
 
     try {
         const ret = await rmlParser.parseFileLive(mapping, sources, options);
-        // res.json(ret)
         res.send(ret)
     } catch (error) {
-        return next(error)
+        res.status(500).send({ error });
     }
 
 })

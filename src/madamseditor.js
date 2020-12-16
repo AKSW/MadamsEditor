@@ -141,8 +141,6 @@ class MadamsEditor_UI {
     }
 
     handleClickRunBtn(e) {
-        this.firstRun = typeof this.firstRun === 'undefined' ? true : false;
-
         const btn = e.target.closest("#convert-btn");
         btn.classList.add('disabled')
         btn.querySelector(".loader").classList.remove("d-none");
@@ -156,9 +154,9 @@ class MadamsEditor_UI {
         })
         .then(result => {
             result = result.replace(/\.\n([\w\<])/g, ".\n\n$1");
-            if (this.firstRun) {
+            if (document.querySelector("#out-wrapper").classList.contains("d-none")) {
                 document.querySelector("#out-wrapper").classList.remove("d-none");
-                document.querySelector("#out-wrapper").scrollIntoView();
+                document.querySelector("#out-wrapper").scrollIntoView({ left: 0, block: 'start', behavior: 'smooth' });
             }
             this.outEditor.setValue(result);
             this.outEditor.clearSelection();
@@ -263,13 +261,19 @@ class MadamsEditor_Parser {
                     },
                     body: JSON.stringify({
                         rml: rml,
-                        sources: { input: inputData }
+                        sources: { 'data.json': inputData }
                     })
                 });
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    return response.text().then(e => {
+                        e = JSON.parse(e);
+                        if (e.error)
+                            throw new Error(e.error);
+                        else
+                            throw new Error('Something went wrong');
+                    })
                 }
                 return response.text()
             })
