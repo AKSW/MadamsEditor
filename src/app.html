@@ -111,5 +111,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
 
 <script id="js-entrypoint" src="app.js"></script>
+<script type="text/javascript">
+  let options = {};
+  if (process.env.NODE_ENV === 'development') {
+      options = {
+          'dataUrl':      './dist/example-data.json',
+          'mappingUrl':   './dist/example-mapping.yml',
+          'rmlMapperUrl': 'http://localhost:3000/rmlmapper'
+      }
+  } else {
+      options = {
+          'dataUrl':      './example-material-data.json',
+          'mappingUrl':   './example-material-mapping.yml',
+          'rmlMapperUrl': 'https://ledot.de/rmlmapper'
+      }
+  }
+  new MadamsEditor(options);
+</script>
 </script>
 </html>

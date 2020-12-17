@@ -1,0 +1,705 @@
+{
+	"section_run": [
+		{
+			"program_basis_set_type": "plane waves",
+			"program_compilation_datetime": 41095,
+			"program_name": "VASP",
+			"program_version": "5.3.5   31Mar14 (build Nov 16 2015 12:42:16) complex                          parallel  unknown ",
+			"section_basis_set_cell_dependent": [
+				{
+					"basis_set_planewave_cutoff": 8.331318496799999e-17
+				}
+			],
+			"section_frame_sequence": [
+				{
+					"frame_sequence_local_frames_ref": [
+						"atom_forces_free_raw",
+						"atom_forces_free",
+						"section_excited_states"
+					],
+					"frame_sequence_to_sampling_ref": "/section_run/0/section_sampling_method/0"
+				}
+			],
+			"section_method": [
+				{
+					"x_vasp_incarOut_ADDGRID": false,
+					"x_vasp_incarOut_AEXX": 0,
+					"x_vasp_unknown_incars": {},
+					"x_vasp_atom_kind_refs": [
+						"/section_run/0/section_method/0/section_method_atom_kind/0",
+						"/section_run/0/section_method/0/section_method_atom_kind/1",
+						"/section_run/0/section_method/0/section_method_atom_kind/2",
+						"/section_run/0/section_method/0/section_method_atom_kind/3",
+						"/section_run/0/section_method/0/section_method_atom_kind/4"
+					],
+					"x_vasp_k_points_generation_method": "Monkhorst-Pack",
+					"x_vasp_incar_GGA": "ML",
+					"electronic_structure_method": "DFT",
+					"k_mesh_points": [
+						[
+							0,
+							0,
+							0.08333333
+						]
+					],
+					"k_mesh_weights": [
+						0.00529101
+					],
+					"x_vasp_incarOut_ENMAX": 400,
+					"x_vasp_incarOut_LCOMPAT": false,
+					"section_method_atom_kind": [
+						{
+							"method_atom_kind_atom_number": 35,
+							"method_atom_kind_explicit_electrons": 7,
+							"method_atom_kind_label": "Br",
+							"method_atom_kind_mass": 79.904,
+							"method_atom_kind_pseudopotential_name": "  PAW_PBE Br 06Sep2000                  "
+						}
+					],
+					"section_method_basis_set": [
+						{
+							"mapping_section_method_basis_set_cell_associated": "/section_run/0/section_basis_set_cell_dependent/0"
+						}
+					]
+				}
+			],
+			"section_sampling_method": [
+				{
+					"sampling_method": "geometry_optimization"
+				}
+			],
+			"section_single_configuration_calculation": [
+				{
+					"atom_forces": [
+						[
+							-6.407104359365999e-13,
+							2.8762595368894796e-12,
+							4.925667756504239e-12
+						]
+					],
+					"energy_free": -5.069587098651091e-18,
+					"energy_total_T0": 0,
+					"energy_total": -5.069587098651091e-18,
+					"single_configuration_calculation_to_system_ref": "/section_run/0/section_system/1",
+					"single_configuration_to_calculation_method_ref": "/section_run/0/section_method/0",
+					"stress_tensor": [
+						[
+							-62084602517.938065,
+							-17095489043.924606,
+							-9252832818.317974
+						]
+					],
+					"energy_reference_highest_occupied": [
+						-4.94271491589e-20
+					],
+					"energy_reference_lowest_unoccupied": [
+						-1.0883585874761999e-19
+					],
+					"section_basis_set": [
+						{
+							"mapping_section_basis_set_cell_dependent": "/section_run/0/section_basis_set_cell_dependent/0"
+						}
+					],
+					"section_dos": [
+						{
+							"dos_energies_normalized": [
+								-4.03290289250676e-18,
+								-4.01434968708504e-18
+							],
+							"dos_integrated_values": [
+								[
+									0,
+									9.9105,
+									10
+								]
+							],
+							"dos_values": [
+								[
+									0,
+									9.2758656013624e-8,
+									0
+								]
+							],
+							"section_dos_fingerprint": {
+								"bins": "00000000000000ffffffe0000000fff00000000000ffffffff80000000000000000000ffffffffff8000c00000000000000000000000000000000000000000f8000000000000ffff0000000000fffffff0000000ffffc000000000c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0000000000000ffff8000000000fffffffff00000ffffff00000000ff000000000000ffffffe0000000fffffffc000000fff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080000000000000c0000000000000f8000000000000ff000000000000ffc00000000000fff00000000000fff80000000000fffc0000000000ffff8000000000fffffc00000000ffffff00000000fffffe00000000fffffe00000000ffffffe0000000ffffffffc00000ffffffffc00000ffffffe0000000fffffe00000000fffff800000000fffff000000000fffff800000000fffffc00000000fffffc00000000fffff000000000ffffc000000000fffe0000000000fffc0000000000ffff8000000000fffffc00000000fffffc00000000ffffc000000000ffff0000000000ffff8000000000fffff000000000ffffff80000000fffffff8000000fffffffc000000fffffff0000000fffffff0000000ffffffff000000ffffffffc00000ffffffff000000fffffff0000000ffffffe0000000fffffff8000000fffffffe000000ffffffffc00000fffffffff80000ffffffffff0000ffffffffffc000ffffffffff8000fffffffff80000ffffffffc00000fffffffe000000ffffffe0000000ffffe000000000fff00000000000ffe00000000000fffc0000000000ffff0000000000ffff0000000000ffff0000000000fffc0000000000fff80000000000fff80000000000ffffff80000000fff80000000000ff800000000000f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ffe00000000000fff80000000000fffc0000000000ffffffff000000fffffffffe0000ffffffe0000000",
+								"indices": [
+									0,
+									145
+								],
+								"stepsize": 0.05,
+								"filling_factor": 0.24273399014778324,
+								"grid_id": "dg_cut:56:-2.0:7.0:(-10.0, 5.0)"
+							}
+						}
+					],
+					"section_eigenvalues": [
+						{
+							"eigenvalues_occupation": [
+								[
+									[
+										1,
+										1
+									],
+									[
+										1,
+										0
+									]
+								]
+							],
+							"eigenvalues_values": [
+								[
+									[
+										-3.82905795936294e-18,
+										-3.8284811757746996e-18
+                                    ],
+                                    [
+										-3.82909000289562e-18,
+										1.1466297516547799e-18
+									]
+								]
+							]
+						}
+					]
+				}
+			],
+			"section_system": [
+				{
+					"atom_labels": [
+						"Br",
+						"Br",
+						"Br",
+						"H",
+						"H",
+						"H",
+						"H",
+						"Ge",
+						"N",
+						"O"
+					],
+					"atom_positions": [
+						[
+							5.973925888678489e-10,
+							-7.794233106849589e-11,
+							5.269479723361272e-10
+						]
+					],
+					"atom_species": [
+						35,
+						35,
+						35,
+						1,
+						1,
+						1,
+						1,
+						32,
+						7,
+						8
+					],
+					"configuration_periodic_dimensions": [
+						true,
+						true,
+						true
+					],
+					"configuration_raw_gid": "hgqdHhRVZwZZCDwQsb9eIH2nQFbi",
+					"lattice_vectors": [
+						[
+							5.88342702e-10,
+							-3.680583e-12,
+							1.6812430000000002e-11
+						]
+					],
+					"simulation_cell": [
+						[
+							5.88342702e-10,
+							-3.680583e-12,
+							1.6812430000000002e-11
+						]
+					],
+					"chemical_composition": "BrBrBrHHHHGeNO",
+					"chemical_composition_reduced": "Br3H4GeNO",
+					"chemical_composition_bulk_reduced": "H4Br3GeNO"
+				},
+				{
+					"atom_labels": [
+						"Br",
+						"Br",
+						"Br",
+						"H",
+						"H",
+						"H",
+						"H",
+						"Ge",
+						"N",
+						"O"
+					],
+					"atom_positions": [
+						[
+							5.973925888678489e-10,
+							-7.794233106849589e-11,
+							5.269479723361272e-10
+						]
+					],
+					"atom_species": [
+						35,
+						8
+					],
+					"configuration_periodic_dimensions": [
+						true,
+						true,
+						true
+					],
+					"configuration_raw_gid": "hgqdHhRVZwZZCDwQsb9eIH2nQFbi",
+					"lattice_vectors": [
+						[
+							5.88342702e-10,
+							-3.680583e-12,
+							1.6812430000000002e-11
+						]
+					],
+					"simulation_cell": [
+						[
+							5.88342702e-10,
+							-3.680583e-12,
+							1.6812430000000002e-11
+						]
+					],
+					"system_type": "bulk",
+					"chemical_composition": "BrBrBrHHHHGeNO",
+					"chemical_composition_reduced": "Br3H4GeNO",
+					"chemical_composition_bulk_reduced": "H4Br3GeNO",
+					"is_representative": true,
+					"section_symmetry": [
+						{
+							"bravais_lattice": "aP",
+							"crystal_system": "triclinic",
+							"hall_number": 1,
+							"hall_symbol": "P 1",
+							"international_short_symbol": "P1",
+							"origin_shift": [
+								0,
+								0,
+								0
+							],
+							"point_group": "1",
+							"space_group_number": 1,
+							"symmetry_method": "MatID (spg)",
+							"transformation_matrix": [
+								[
+									0,
+									-1.0000000000000002,
+									0
+								]
+							],
+							"section_original_system": [
+								{
+									"equivalent_atoms_original": [
+										0,
+										9
+									],
+									"wyckoff_letters_original": [
+										"a"
+									]
+								}
+							],
+							"section_primitive_system": [
+								{
+									"atom_positions_primitive": [
+										[
+											0.8280339500000004,
+											0.9793276099999998,
+											0.72732624
+										]
+									],
+									"atomic_numbers_primitive": [
+										35,
+										8
+									],
+									"equivalent_atoms_primitive": [
+										0,
+										9
+									],
+									"lattice_vectors_primitive": [
+										[
+											4.213434438929763,
+											0,
+											0
+										]
+									],
+									"wyckoff_letters_primitive": [
+										"a"
+									]
+								}
+							],
+							"section_std_system": [
+								{
+									"atom_positions_std": [
+										[
+											0.8280339500000004,
+											0.9793276099999998,
+											0.72732624
+										]
+									],
+									"atomic_numbers_std": [
+										35,
+										8
+									],
+									"equivalent_atoms_std": [
+										0,
+										9
+									],
+									"lattice_vectors_std": [
+										[
+											4.213434438929763,
+											0,
+											0
+										]
+									],
+									"wyckoff_letters_std": [
+										"a"
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"atom_labels": [
+						"Br",
+						"Br",
+						"Br",
+						"H",
+						"H",
+						"H",
+						"H",
+						"Ge",
+						"N",
+						"O"
+					],
+					"atom_positions": [
+						[
+							5.973925888678489e-10,
+							-7.794233106849589e-11,
+							5.269479723361272e-10
+						]
+					],
+					"atom_species": [
+						35,
+						8
+					],
+					"configuration_periodic_dimensions": [
+						true,
+						true,
+						true
+					],
+					"configuration_raw_gid": "hgqdHhRVZwZZCDwQsb9eIH2nQFbi",
+					"lattice_vectors": [
+						[
+							5.88342702e-10,
+							-3.680583e-12,
+							1.6812430000000002e-11
+						]
+					],
+					"simulation_cell": [
+						[
+							5.88342702e-10,
+							-3.680583e-12,
+							1.6812430000000002e-11
+						]
+					],
+					"system_type": "bulk",
+					"chemical_composition": "BrBrBrHHHHGeNO",
+					"chemical_composition_reduced": "Br3H4GeNO",
+					"chemical_composition_bulk_reduced": "H4Br3GeNO"
+				}
+			]
+		}
+	],
+	"section_workflow": {
+		"workflow_type": "geometry_optimization",
+		"calculation_result_ref": "/section_run/0/section_single_configuration_calculation/0",
+		"calculations_ref": [
+			"/section_run/0/section_single_configuration_calculation/0"
+		],
+		"section_geometry_optimization": {
+			"geometry_optimization_type": "static",
+			"final_force_maximum": 3.4796457453037246e-11,
+			"optimization_steps": 1
+		}
+	},
+	"section_metadata": {
+		"upload_id": "PACv39BKSFKLtphwxzY-Og",
+		"calc_id": "baBkU4yx2wQ1WIQJxuEZhKWq02bS",
+		"calc_hash": "StPwviZyWhUlRUoQHKNiSIge0r-I",
+		"mainfile": "1346set_HOIPID/0264/bandgap_gga_G/vasprun.xml",
+		"files": [
+			"1346set_HOIPID/0264/bandgap_gga_G/vasprun.xml",
+			"1346set_HOIPID/0264/bandgap_gga_G/INCAR",
+			"1346set_HOIPID/0264/bandgap_gga_G/KPOINTS",
+			"1346set_HOIPID/0264/bandgap_gga_G/OUTCAR",
+			"1346set_HOIPID/0264/bandgap_gga_G/POSCAR"
+		],
+		"pid": "3329175",
+		"domain": "dft",
+		"published": true,
+		"processed": true,
+		"last_processing": "2020-09-23T14:37:23.645582",
+		"nomad_version": "1.0.0",
+		"nomad_commit": "4d71fee0",
+		"parser_name": "parsers/vasp",
+		"references": [],
+		"uploader": "1d279d31-6a26-42a1-8591-870303da6f04",
+		"coauthors": [
+			"01e0a8d2-4322-4e21-80dc-efab6ee79888",
+			"20f0ae98-57e0-4445-b068-0e98fc309d2b",
+			"13f97fff-5bca-4604-bdc3-0fc59fe703e9"
+		],
+		"shared_with": [],
+		"with_embargo": false,
+		"upload_time": "2017-03-11T09:29:14.363000+00:00",
+		"upload_name": "8SUxdIgHSTqWNrCK7Y7i8w",
+		"datasets": [
+			"8phUj7nvShiiGqrUja6evw"
+		],
+		"formula": "H4Br3GeNO",
+		"atoms": [
+			"Br",
+			"Ge",
+			"H",
+			"N",
+			"O"
+		],
+		"n_atoms": 10,
+		"dft": {
+			"basis_set": "plane waves",
+			"xc_functional": "unavailable",
+			"xc_functional_names": [],
+			"system": "bulk",
+			"compound_type": "quinary",
+			"crystal_system": "triclinic",
+			"spacegroup": 1,
+			"spacegroup_symbol": "P1",
+			"code_name": "VASP",
+			"code_version": "5.3.5",
+			"n_geometries": 3,
+			"n_calculations": 1,
+			"n_total_energies": 2,
+			"n_quantities": 501,
+			"quantities": [
+				"optimization_steps",
+				"code_name",
+				"x_vasp_incarOut_I_CONSTRAINED_M"
+			],
+			"searchable_quantities": [
+				"stress_tensor",
+				"electronic_dos",
+				"eigenvalues_values"
+			],
+			"geometries": [
+				"hgqdHhRVZwZZCDwQsb9eIH2nQFbi"
+			],
+			"group_hash": "ctQfJyqn8p4fyVasR7HOSoaVFQAx",
+			"labels_springer_compound_class": [],
+			"labels_springer_classification": [],
+			"workflow": "/section_workflow",
+			"optimade": {
+				"elements": [
+					"Br",
+					"Ge",
+					"H",
+					"N",
+					"O"
+				],
+				"nelements": 5,
+				"elements_ratios": [
+					0.3
+				],
+				"chemical_formula_descriptive": "H4Br3GeNO",
+				"chemical_formula_reduced": "Br3H4GeNO",
+				"chemical_formula_hill": "H4Br3GeNO",
+				"chemical_formula_anonymous": "A3BC4DE",
+				"dimension_types": [
+					1,
+					1,
+					1
+				],
+				"lattice_vectors": [
+					[
+						5.88342702,
+						-0.036805830000000005,
+						0.1681243
+					]
+				],
+				"cartesian_site_positions": [
+					[
+						5.9739258886784885,
+						-0.779423310684959,
+						5.269479723361272
+					]
+				],
+				"nsites": 10,
+				"species_at_sites": [
+					"Br",
+					"Br",
+					"Br",
+					"H",
+					"H",
+					"H",
+					"H",
+					"Ge",
+					"N",
+					"O"
+				],
+				"structure_features": [],
+				"species": [
+					{
+						"name": "O",
+						"chemical_symbols": [
+							"O"
+						],
+						"concentration": [
+							1
+						]
+					},
+					{
+						"name": "Br",
+						"chemical_symbols": [
+							"Br"
+						],
+						"concentration": [
+							1
+						]
+					},
+					{
+						"name": "Ge",
+						"chemical_symbols": [
+							"Ge"
+						],
+						"concentration": [
+							1
+						]
+					},
+					{
+						"name": "H",
+						"chemical_symbols": [
+							"H"
+						],
+						"concentration": [
+							1
+						]
+					},
+					{
+						"name": "N",
+						"chemical_symbols": [
+							"N"
+						],
+						"concentration": [
+							1
+						]
+					}
+				]
+			}
+		},
+		"encyclopedia": {
+			"status": "unsupported_method_type",
+			"material": {
+				"material_type": "bulk",
+				"material_id": "8whp07Eo10ir_Xu_6YW_b592lVUS",
+				"formula": "Br3GeH4NO",
+				"formula_reduced": "Br3GeH4NO",
+				"species_and_counts": "Br3 Ge H4 N O",
+				"species": "Br Ge H N O",
+				"bulk": {
+					"bravais_lattice": "aP",
+					"crystal_system": "triclinic",
+					"has_free_wyckoff_parameters": true,
+					"point_group": "1",
+					"space_group_number": 1,
+					"space_group_international_short_symbol": "P1"
+				},
+				"idealized_structure": {
+					"atom_labels": [
+						"Br",
+						"Br",
+						"Br",
+						"H",
+						"H",
+						"H",
+						"H",
+						"Ge",
+						"N",
+						"O"
+					],
+					"atom_positions": [
+						[
+							0.8280339500000004,
+							0.9793276099999998,
+							0.72732624
+						]
+					],
+					"lattice_vectors": [
+						[
+							4.2134344389297634e-10,
+							0,
+							0
+						]
+					],
+					"lattice_vectors_primitive": [
+						[
+							4.2134344389297634e-10,
+							0,
+							0
+						]
+					],
+					"periodicity": [
+						true,
+						true,
+						true
+					],
+					"number_of_atoms": 10,
+					"cell_volume": 1.7359969917200986e-28,
+					"wyckoff_sets": [
+						{
+							"wyckoff_letter": "a",
+							"indices": [
+								3
+							],
+							"element": "H",
+							"variables": {
+								"x": 0.06766586000000012,
+								"y": 0.50823745,
+								"z": 0.37536994999999995
+							}
+						}
+					],
+					"lattice_parameters": {
+						"a": 4.2134344389297634e-10,
+						"b": 5.885943760268065e-10,
+						"c": 7.314157346879225e-10,
+						"alpha": 1.4982624423281485,
+						"beta": 1.2857057012994444,
+						"gamma": 1.5390037802835677
+					}
+				}
+			},
+			"method": {
+				"method_type": "DFT",
+				"core_electron_treatment": "pseudopotential",
+				"functional_long_name": "unavailable",
+				"functional_type": "None"
+			},
+			"properties": {
+				"atomic_density": 5.760378645640152e+28,
+				"mass_density": 3313.334628732153,
+				"electronic_dos": "/section_run/0/section_single_configuration_calculation/0/section_dos/0",
+				"energies": {
+					"energy_total": -5.069587098651091e-19,
+					"energy_total_T0": 0,
+					"energy_free": -5.069587098651091e-19
+				}
+			},
+			"calculation": {
+				"calculation_type": "geometry optimization"
+			}
+		}
+	}
+}

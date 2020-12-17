@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pre:dev": "rm -rf dist/dev .cache/* && mkdir dist/dev && cp dist/*.yml dist/*.json dist/dev/",
+    "pre:dev": "rm -rf dist/dev .cache/* && mkdir dist/dev && ln -s /usr/src/app/dist/ dist/dev/dist",
     "dev": "npm run dev-server & npm run dev-app",
     "dev-server": "nodemon src/server.js -w src/",
-    "dev-app": "npm run pre:dev && parcel src/app.html --hmr-port 1235 --host 0.0.0.0 --out-file index.html --out-dir dist/dev",
+    "dev-app": "npm run pre:dev && parcel src/app.html --hmr-port 1235 --host 0.0.0.0 --out-file index.html --out-dir dist/dev --global MadamsEditor",
     "app": "npm run build-app && tail -f /dev/null",
     "build": "npm run build-app",
-    "build-app": "rm -rf dist/index.* dist/app.* && parcel build src/app.html --out-file index.html --public-url ./",
+    "build-app": "rm -rf dist/index.* dist/app.* && parcel build src/app.html --out-file index.html --public-url ./ --global MadamsEditor",
     "server": "node src/server.js -w src/"
   },
   "keywords": [],
@@ -20,8 +20,10 @@
   "dependencies": {
     "@rmlio/yarrrml-parser": "^1.2.1",
     "express": "^4.17.1",
+    "jquery": "^3.5.1",
     "n3": "^1.6.4",
-    "rocketrml": "^1.8.2"
+    "rocketrml": "^1.8.2",
+    "underscore": "^1.12.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6",

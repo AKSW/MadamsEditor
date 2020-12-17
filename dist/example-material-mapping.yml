@@ -1,0 +1,68 @@
+#
+# Example mapping
+#
+prefixes:
+  stream: https://stream-projekt.net/
+  nomad: http://https://nomad-coe.eu/ontology#
+  mvc: http://stream-ontology.com/matvoc-core/
+  data: https://nomad-coe.eu/data/
+  metadata: https://nomad-coe.eu/metadata/
+  dcat: http://www.w3.org/ns/dcat#
+  oboe: http://ecoinformatics.org/oboe/oboe.1.2/oboe-core.owl#
+  grel: http://users.ugent.be/~bjdmeest/function/grel.ttl#
+
+mappings:
+
+  runs:
+    sources:
+      - ['data.json~jsonpath', '$']
+    s:
+      value: $(section_run[0])
+      type: blank
+    po:
+      - [a, mvc:Run]
+      - [mvc:resultsIn, data:$(section_metadata.pid)~iri]
+
+  dataset:
+    sources:
+      - ['data.json~jsonpath', '$']
+    s: data:$(section_metadata.pid)
+    po:
+      - [a, mvc:Dataset]
+      - [mvc:hasMetadata, metadata:$(section_metadata.pid)~iri]
+      - p: oboe:hasMeasurement
+        o:
+          mapping: measurement
+
+  measurement:
+    sources:
+      - ['data.json~jsonpath', '$.section_run[*].section_system[*]']
+    s: null
+    po:
+      - [a, oboe:Measurement]
+      - [nomad:configuration_raw_gid, $(configuration_raw_gid)]
+      - [nomad:is_representative, $(is_representative)]
+      - p: oboe:hasValue
+        o:
+          mapping: measuredValue
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(PATH~), s]
+              - [str2, $(PATH~^^), o]
+
+  measuredValue:
+    sources:
+      - ['data.json~jsonpath', '$.section_run[*].section_system[*].atom_species[*]']
+    s: null
+    po:
+      - [a, oboe:MeasuredValue]
+      - [mvc:hasRawValue, $(.)]
+
+  metadata:
+    sources:
+      - ['data.json~jsonpath', '$']
+    s: metadata:$(section_metadata.pid)
+    po:
+      - [a, dcat:Dataset]
+      - [rdfs:label, $(section_metadata.formula)]

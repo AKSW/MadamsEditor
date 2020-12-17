@@ -1,19 +1,13 @@
 import MadamsEditor from "./madamseditor";
 
-let options = {};
-
-if (process.env.NODE_ENV === 'development') {
-    options = {
-        'dataUrl':      './example-data.json',
-        'mappingUrl':   './example-mapping.yml',
-        'rmlMapperUrl': 'http://localhost:3000/rmlmapper'
+(function (root, factory) {
+    if (typeof define === "function" && define.amd) {
+        define(["jquery", "underscore"], factory);
+    } else if (typeof exports === "object") {
+        module.exports = factory(require("jquery"), require("underscore"));
+    } else {
+        root.Requester = factory(root.$, root._);
     }
-} else {
-    options = {
-        'dataUrl':      './example-data.json',
-        'mappingUrl':   './example-mapping.yml',
-        'rmlMapperUrl': 'https://ledot.de/rmlmapper'
-    }
-}
-
-new MadamsEditor(options);
+}(this, function ($, _) {
+    return MadamsEditor;
+}));

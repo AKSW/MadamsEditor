@@ -76,22 +76,15 @@ export default class MadamsEditor {
             return _GLOBAL.instance;
         }
 
-        this.config = config;
+        this.config = Object.assign(_GLOBAL.config, _GLOBAL.config.defaults, config);
+        console.log('Welcome to MadamsEditor. Config:', this.config);
+
         this.ui = new MadamsEditor_UI();
         this.parser = new MadamsEditor_Parser();
 
-        this._init(config);
-        _GLOBAL.instance = this;
-    }
-
-    _init(config) {
-        const self = this;
-
-        Object.assign(_GLOBAL.config, _GLOBAL.config.defaults, config);
-        console.log('config', _GLOBAL.config);
-
         this.ui.init(this);
         this.parser.init(this);
+        _GLOBAL.instance = this;
     }
 }
 
@@ -102,11 +95,11 @@ class MadamsEditor_UI {
         this.parser = parent.parser;
 
         this.initEditors();
-        if (_GLOBAL.config.dataUrl != "") {
-            this.loadExampleData(_GLOBAL.config.dataUrl, this.dataEditor);
+        if (this.config.dataUrl != "") {
+            this.loadExampleData(this.config.dataUrl, this.dataEditor);
         }
-        if (_GLOBAL.config.mappingUrl != "") {
-            this.loadExampleData(_GLOBAL.config.mappingUrl, this.yarrrmlEditor);
+        if (this.config.mappingUrl != "") {
+            this.loadExampleData(this.config.mappingUrl, this.yarrrmlEditor);
         }
 
         // init run btn event
@@ -240,7 +233,7 @@ class MadamsEditor_Parser {
       };
 
     init(parent) {
-        this.parent = parent;
+        this.config = parent.config;
         this.ui = parent.ui;
     }
 
@@ -254,7 +247,7 @@ class MadamsEditor_Parser {
         return new Promise((resolve, reject) => {
             this.yarrrml2RML(mappingStr)
             .then(rml => {
-                return fetch(_GLOBAL.config.rmlMapperUrl, {
+                return fetch(self.config.rmlMapperUrl, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
