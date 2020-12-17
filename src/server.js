@@ -39,18 +39,24 @@ app.post('/rmlmapper', async (req, res, next) => {
         return res.status(500).send({ error: 'Parameter missing!' })
     }
 
+
     const options = {
         toRDF: true,
         verbose: false,
         xmlPerformanceMode: false,
         replace: false,
+        functions: {
+            'https://github.com/AKSW/MadamsEditor/functions.ttl#toUpperCase': function (str) {
+                return str[0].toUpperCase();
+            }
+        }
     };
 
     try {
         const ret = await rmlParser.parseFileLive(mapping, sources, options);
         res.send(ret)
     } catch (error) {
-        res.status(500).send({ error });
+        res.status(500).send({ error: error.toString() });
     }
 
 })
