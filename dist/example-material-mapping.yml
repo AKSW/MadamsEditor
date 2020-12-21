@@ -36,7 +36,7 @@ mappings:
 
   measurement:
     sources:
-      - ['data.json~jsonpath', '$.section_run[*].section_system[*]']
+      - ['data.json~jsonpath', '$.section_run[*].section_system[?(@.is_representative)]']
     s: null
     po:
       - [a, oboe:Measurement]
@@ -53,7 +53,7 @@ mappings:
 
   measuredValue:
     sources:
-      - ['data.json~jsonpath', '$.section_run[*].section_system[*].atom_species[*]']
+      - ['data.json~jsonpath', '$.section_run[*].section_system[?(@.is_representative)].atom_species[*]']
     s: null
     po:
       - [a, oboe:MeasuredValue]
