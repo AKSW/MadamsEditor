@@ -412,6 +412,12 @@ class MadamsEditor_Parser {
         });
         let resultQuads = [];
 
+        // manually sort, to have better turtel with rdf:type first
+        const sortResultFn = (a, b) => {
+            const isRdfType = a.subject.id == b.subject.id && a.predicate.id == _GLOBAL.prefixes.rdf + 'type';
+            return isRdfType ? -1 : 0;
+        }
+
         return new Promise((resolve, reject) => {
             parser.parse(rdf, (err, quad, prefixes) => {
                 if (err)
@@ -419,11 +425,7 @@ class MadamsEditor_Parser {
                 if (quad)
                     return resultQuads.push(quad);
 
-                // manually sort, to have better turtel with rdf:type first
-                resultQuads.sort((a,b) => {
-                    if (a.predicate.id == _GLOBAL.prefixes.rdf + 'type') return -1;
-                    return 0;
-                });
+                resultQuads.sort(sortResultFn);
                 outWriter.addQuads(resultQuads);
                 outWriter.end((err,outTtl)=>{
                     if (err) return reject('N3 parser error: ' + err);
