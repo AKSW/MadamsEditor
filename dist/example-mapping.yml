@@ -1,6 +1,5 @@
 prefixes:
   schema: "http://schema.org/"
-  myfunc: "http://myfunc.com/"
 mappings:
   person:
     sources:

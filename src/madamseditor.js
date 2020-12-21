@@ -405,29 +405,30 @@ class MadamsEditor_Parser {
     }
 
     rdf2Turtle(rdf) {
-        const self = this;
         const parser = new N3.Parser();
-        const prefixes = self.getUsedPrefixes();
         const outWriter = new N3.Writer({
             format: "turtle",
-            prefixes: prefixes
+            prefixes: this.getUsedPrefixes()
         });
+        let resultQuads = [];
 
         return new Promise((resolve, reject) => {
             parser.parse(rdf, (err, quad, prefixes) => {
-                if (err) {
+                if (err)
                     return reject('N3 parser error: ' + err);
-                }
-                if (quad) {
-                    outWriter.addQuad(quad)
-                } else {
-                    outWriter.end((err,outTtl)=>{
-                        if (err) {
-                            return reject('N3 parser error: ' + err);
-                        }
-                        resolve(outTtl);
-                    });
-                }
+                if (quad)
+                    return resultQuads.push(quad);
+
+                // manually sort, to have better turtel with rdf:type first
+                resultQuads.sort((a,b) => {
+                    if (a.predicate.id == _GLOBAL.prefixes.rdf + 'type') return -1;
+                    return 0;
+                });
+                outWriter.addQuads(resultQuads);
+                outWriter.end((err,outTtl)=>{
+                    if (err) return reject('N3 parser error: ' + err);
+                    resolve(outTtl);
+                });
             })
         });
     }
