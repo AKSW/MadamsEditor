@@ -6,7 +6,8 @@
 			"speaks": [
 				"de",
 				"en"
-			]
+			],
+			"public": true
 		},
 		{
 			"firstname": "Jane",
@@ -14,7 +15,8 @@
 			"speaks": [
 				"fr",
 				"es"
-			]
+			],
+			"public": false
 		}
 	]
   }
