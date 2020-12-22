@@ -467,4 +467,4 @@ var r=arguments[3];Object.defineProperty(exports,"__esModule",{value:!0}),export
 var define;
 var e,r=u(require("./madamseditor"));function u(e){return e&&e.__esModule?e:{default:e}}!function(r,u){"function"==typeof e&&e.amd?e(["jquery","underscore"],u):"object"==typeof exports?module.exports=u(require("jquery"),require("underscore")):(void 0).Requester=u((void 0).$,(void 0)._)}(0,function(e,u){return r.default});
 },{"./madamseditor":"hCoT","jquery":"juYr","underscore":"W0EG"}]},{},["A2T1"], "MadamsEditor")
-//# sourceMappingURL=app.e9054877.js.map
+//# sourceMappingURL=app.77be2130.js.map

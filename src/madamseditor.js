@@ -11,7 +11,6 @@ let _GLOBAL = {
             mappingUrl: 'example-mapping.yml',
             rmlMapperUrl: 'http://localhost:3000/rmlmapper'
         }
-
     },
     prefixes: {
         as: "https://www.w3.org/ns/activitystreams#",

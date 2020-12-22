@@ -18,6 +18,8 @@ The mapper is based on [YARRRML-Parser](https://github.com/RMLio/yarrrml-parser)
 
 Access app at `http://localhost:1234` and RML mapping server at `http://localhost:3000`
 
+To change default ports edit file `.env`
+
 ## Create productive build
 
 `docker-compose up build`
