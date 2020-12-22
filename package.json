@@ -8,11 +8,12 @@
     "pre:dev": "rm -rf dist/dev .cache/* && mkdir dist/dev && ln -s /usr/src/app/dist/ dist/dev/dist",
     "dev": "npm run dev-server & npm run dev-app",
     "dev-server": "nodemon src/server.js -w src/",
-    "dev-app": "npm run pre:dev && parcel src/app.html --hmr-port 1235 --host 0.0.0.0 --out-file index.html --out-dir dist/dev --global MadamsEditor",
+    "dev-app": "npm run app -- --hmr-port $APP_PORT_HMR --host 0.0.0.0",
+    "server": "node src/server.js",
+    "app": "npm run pre:dev && parcel src/app.html --out-file index.html --out-dir dist/dev --port $APP_PORT --global MadamsEditor",
     "build": "npm run build-app && npm run build-server",
-    "build-app": "rm -rf dist/index.* dist/app.* && parcel build src/app.html --out-file index.html --public-url ./ --global MadamsEditor",
     "build-server": "echo \"Nothing else todo.\"",
-    "server": "node src/server.js"
+    "build-app": "rm -rf dist/index.* dist/app.* && parcel build src/app.html --out-file index.html --public-url ./ --global MadamsEditor"
   },
   "keywords": [],
   "author": "",

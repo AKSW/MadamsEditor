@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const rmlParser = require("rocketrml");
 
 // Constants
-const { PORT = '3000' } = process.env
+const { SERVER_PORT = '3000' } = process.env
 const HOST = '0.0.0.0';
 
 // App
@@ -61,5 +61,5 @@ app.post('/rmlmapper', async (req, res, next) => {
 
 })
 
-app.listen(PORT, HOST);
-console.log(`Running on server http://${HOST}:${PORT}`);
+app.listen(SERVER_PORT, HOST);
+console.log(`RML server http://${HOST}:${SERVER_PORT}`);

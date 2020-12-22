@@ -15,32 +15,46 @@ services:
     extends:
       service: base
     command: npm run dev
+    environment:
+      - SERVER_PORT=$SERVER_PORT
+      - APP_PORT=$APP_PORT
+      - APP_PORT_HMR=$APP_PORT_HMR
     ports:
-      - 1234:1234
-      - 1235:1235
-      - 3000:3000
+      - $APP_PORT:$APP_PORT
+      - $APP_PORT_HMR:$APP_PORT_HMR
+      - $SERVER_PORT:$SERVER_PORT
 
   dev-server:
     extends:
       service: base
     command: npm run dev-server
+    environment:
+      - SERVER_PORT=$SERVER_PORT
     ports:
-      - 3000:3000
+      - $SERVER_PORT:$SERVER_PORT
 
   dev-app:
     extends:
       service: base
     command: npm run dev-app
+    environment:
+      - APP_PORT=$APP_PORT
+      - APP_PORT_HMR=$APP_PORT_HMR
     ports:
-      - 1234:1234
-      - 1235:1235
+      - $APP_PORT:$APP_PORT
+      - $APP_PORT_HMR:$APP_PORT_HMR
 
   server:
     extends:
-      service: base
+      service: dev-server
     command: npm run server
-    ports:
-      - 3000:3000
+    environment:
+      - SERVER_PORT=$SERVER_PORT
+
+  app:
+    extends:
+      service: dev-app
+    command: npm run app
 
   build:
     extends:
