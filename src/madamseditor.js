@@ -98,7 +98,7 @@ class MadamsEditor_UI {
             this.loadExampleData(this.config.dataUrl, this.dataEditor);
         }
         if (this.config.mappingUrl != "") {
-            this.loadExampleData(this.config.mappingUrl, this.yarrrmlEditor);
+            this.loadExampleData(this.config.mappingUrl, this.mappingEditor);
         }
 
         // init run btn event
@@ -110,18 +110,19 @@ class MadamsEditor_UI {
 
     initEditors() {
         const self = this;
-        let handleUpdateYarrmlEditorTimeout;
-        this.yarrrmlEditor = ace.edit("yarrrml-editor")
-        this.yarrrmlEditor.setTheme("ace/theme/tomorrow")
-        this.yarrrmlEditor.session.setMode("ace/mode/yaml")
-        this.yarrrmlEditor.session.on("change", () => {
-            clearTimeout(handleUpdateYarrmlEditorTimeout)
-            handleUpdateYarrmlEditorTimeout = setTimeout(() => {
+        this.parseCurrentYarrrmlFn = null;
+        this.mappingEditor = ace.edit("mapping-editor")
+        this.mappingEditor.setTheme("ace/theme/tomorrow")
+        this.mappingEditor.session.setMode("ace/mode/yaml")
+        this.mappingEditor.focus();
+        this.mappingEditor.session.on("change", () => {
+            clearTimeout(self.parseCurrentYarrrmlFn)
+            self.parseCurrentYarrrmlFn = setTimeout(() => {
                 self.handleUpdateYarrmlEditor();
             }, 1500)
         })
 
-        this.dataEditor = ace.edit("json-editor")
+        this.dataEditor = ace.edit("data-editor")
         this.dataEditor.setTheme("ace/theme/tomorrow")
         // this.jsonEditor.setReadOnly(true);  // false to make it editable
         this.dataEditor.session.setMode("ace/mode/json")
@@ -138,6 +139,7 @@ class MadamsEditor_UI {
         btn.querySelector(".loader").classList.remove("d-none");
         btn.querySelector(".bi").classList.add("d-none");
 
+        clearTimeout(this.parseCurrentYarrrmlFn)
         this.cleanupMessages();
 
         this.parser.runMapping()
@@ -146,10 +148,6 @@ class MadamsEditor_UI {
         })
         .then(result => {
             result = result.replace(/\.\n([\w\<])/g, ".\n\n$1");
-            if (document.querySelector("#out-wrapper").classList.contains("d-none")) {
-                document.querySelector("#out-wrapper").classList.remove("d-none");
-                document.querySelector("#out-wrapper").scrollIntoView({ left: 0, block: 'start', behavior: 'smooth' });
-            }
             this.outEditor.setValue(result);
             this.outEditor.clearSelection();
         })
@@ -160,6 +158,7 @@ class MadamsEditor_UI {
             btn.classList.remove('disabled')
             btn.querySelector(".loader").classList.add("d-none");
             btn.querySelector(".bi").classList.remove("d-none");
+            this.mappingEditor.focus();
         })
     }
 
@@ -167,7 +166,7 @@ class MadamsEditor_UI {
         this.cleanupMessages();
 
         const inputData = this.dataEditor.getValue();
-        let mappingStr = this.yarrrmlEditor.getValue();
+        let mappingStr = this.mappingEditor.getValue();
         mappingStr = this.parser.yarrrmlExtend(mappingStr);
         mappingStr = this.parser.yarrrmlEncodeBrackets(mappingStr);
 
@@ -239,7 +238,7 @@ class MadamsEditor_Parser {
     runMapping() {
         const self = this;
         const inputData = this.ui.dataEditor.getValue();
-        let mappingStr = this.ui.yarrrmlEditor.getValue();
+        let mappingStr = this.ui.mappingEditor.getValue();
         mappingStr = this.yarrrmlExtend(mappingStr);
         mappingStr = this.yarrrmlEncodeBrackets(mappingStr);
 
@@ -373,33 +372,12 @@ class MadamsEditor_Parser {
                 });
             }
         } catch (e) {
-            return new Promise((resolve, reject) => {
-                reject('Generate the RML mapping from YARRRML failed. ' + e)
-            });
+            return Promise.reject('Generate the RML mapping from YARRRML failed. ' + e);
         }
 
-        quads.forEach(q => {
-            if (q.object.termType === "Literal") {
-                writer.addQuad(quad(
-                    namedNode(q.subject.value),
-                    namedNode(q.predicate.value),
-                    literal(q.object.value)
-                ))
-            } else {
-                writer.addQuad(
-                    namedNode(q.subject.value),
-                    namedNode(q.predicate.value),
-                    namedNode(q.object.value)
-                )
-            }
-        });
+        writer.addQuads(quads);
         return new Promise((resolve, reject) => {
-            writer.end( (err,doc) => {
-                if (err) {
-                    return reject(e);
-                }
-                resolve(doc)
-            });
+            writer.end( (err,doc) => err ? eject(e) : resolve(doc));
         });
     }
 
@@ -437,7 +415,7 @@ class MadamsEditor_Parser {
 
     getUsedPrefixes() {
         const self = this;
-        const yaml = this.ui.yarrrmlEditor.getValue()
+        const yaml = this.ui.mappingEditor.getValue()
         let prefixes = {};
         prefixes.rdf = _GLOBAL.prefixes.rdf;
         Object.keys(_GLOBAL.prefixes).forEach(pre=>{
