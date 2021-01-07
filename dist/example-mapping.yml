@@ -1,5 +1,6 @@
 prefixes:
   schema: "http://schema.org/"
+  fx: "https://github.com/AKSW/MadamsEditor/functions.ttl#"
 mappings:
   person:
     sources:
@@ -8,4 +9,8 @@ mappings:
     po:
       - [a, schema:Person]
       - [schema:name, $(firstname)]
-      - [schema:language, $(speaks.*)]
+      - p: schema:language
+        o:
+          - function: fx:toUpperCase
+            parameters:
+              - [str1, $(speaks.*)]
