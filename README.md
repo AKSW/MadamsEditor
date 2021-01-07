@@ -6,7 +6,7 @@ The mapper is based on [YARRRML-Parser](https://github.com/RMLio/yarrrml-parser)
 
 ## Screenshot
 
-![Screenshot](./screenshot.png)
+[![Screenshot](./screenshot.png)](https://aksw.github.io/MadamsEditor/dist/)
 
 ## Init, install packages
 
