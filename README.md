@@ -10,11 +10,13 @@ The mapper is based on [YARRRML-Parser](https://github.com/RMLio/yarrrml-parser)
 
 ## Init, install packages
 
-`docker-compose up install`
+    docker-compose up install
 
 ## Start development environment
 
-`docker-compose up dev`
+Run installation first, then:
+
+    docker-compose up dev
 
 Access app at `http://localhost:1234` and RML mapping server at `http://localhost:3000`
 
@@ -22,7 +24,9 @@ To change default ports edit file `.env`
 
 ## Create productive build
 
-`docker-compose up build`
+Run installation first, then
+
+    docker-compose up build
 
 Will create files in `./dist/`
 
