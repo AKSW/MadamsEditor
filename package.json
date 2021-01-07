@@ -20,8 +20,10 @@
   "license": "ISC",
   "dependencies": {
     "@rmlio/yarrrml-parser": "^1.2.1",
+    "ace-builds": "^1.4.12",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
+    "js-yaml": "^4.0.0",
     "n3": "^1.6.4",
     "rocketrml": "^1.8.2",
     "underscore": "^1.12.0"

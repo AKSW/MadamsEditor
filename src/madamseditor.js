@@ -1,7 +1,15 @@
 import yarrrml from '@rmlio/yarrrml-parser/lib/rml-generator'
+import jsyaml from 'js-yaml';
 const N3 = require('n3');
-const { DataFactory } = N3;
-const { namedNode, literal, defaultGraph, quad } = DataFactory;
+
+// load ace editor, thems and modes
+import 'ace-builds/src-min-noconflict/ace'
+import 'ace-builds/src-min-noconflict/theme-tomorrow'
+import 'ace-builds/src-min-noconflict/mode-yaml'
+import 'ace-builds/src-min-noconflict/mode-turtle'
+import 'ace-builds/src-min-noconflict/mode-json'
+// load workers from CDN, keeps our public/dist clean...
+ace.config.set('workerPath', 'https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-min-noconflict');
 
 let _GLOBAL = {
     instance: null,
@@ -110,27 +118,26 @@ class MadamsEditor_UI {
 
     initEditors() {
         const self = this;
-        this.parseCurrentYarrrmlFn = null;
-        this.mappingEditor = ace.edit("mapping-editor")
-        this.mappingEditor.setTheme("ace/theme/tomorrow")
-        this.mappingEditor.session.setMode("ace/mode/yaml")
+
+        this.mappingEditor = ace.edit("mapping-editor", {
+            mode: "ace/mode/yaml",
+            theme: "ace/theme/tomorrow",
+            tabSize: 2
+        });
         this.mappingEditor.focus();
         this.mappingEditor.session.on("change", () => {
-            clearTimeout(self.parseCurrentYarrrmlFn)
-            self.parseCurrentYarrrmlFn = setTimeout(() => {
-                self.handleUpdateYarrmlEditor();
-            }, 1500)
-        })
+            self.handleUpdateYarrmlEditor();
+        });
 
-        this.dataEditor = ace.edit("data-editor")
-        this.dataEditor.setTheme("ace/theme/tomorrow")
-        // this.jsonEditor.setReadOnly(true);  // false to make it editable
-        this.dataEditor.session.setMode("ace/mode/json")
+        this.dataEditor = ace.edit("data-editor" ,{
+            mode: "ace/mode/json",
+            theme: "ace/theme/tomorrow",
+        });
 
-        this.outEditor = ace.edit("out-editor")
-        this.outEditor.setTheme("ace/theme/tomorrow")
-        this.outEditor.session.setMode("ace/mode/turtle")
-        // this.outEditor.setReadOnly(true);  // false to make it editable
+        this.outEditor = ace.edit("out-editor", {
+            mode: "ace/mode/turtle",
+            theme: "ace/theme/tomorrow",
+        });
     }
 
     handleClickRunBtn(e) {
@@ -139,7 +146,7 @@ class MadamsEditor_UI {
         btn.querySelector(".loader").classList.remove("d-none");
         btn.querySelector(".bi").classList.add("d-none");
 
-        clearTimeout(this.parseCurrentYarrrmlFn)
+        clearTimeout(this.currentYarrrmlValidationTimout)
         this.cleanupMessages();
 
         this.parser.runMapping()
@@ -163,18 +170,37 @@ class MadamsEditor_UI {
     }
 
     handleUpdateYarrmlEditor() {
-        this.cleanupMessages();
+        const self = this;
+        this.currentYarrrmlValidationTimout = null;
 
-        const inputData = this.dataEditor.getValue();
         let mappingStr = this.mappingEditor.getValue();
-        mappingStr = this.parser.yarrrmlExtend(mappingStr);
-        mappingStr = this.parser.yarrrmlEncodeBrackets(mappingStr);
+        this.cleanupMessages();
+        clearTimeout(this.currentYarrrmlValidationTimout);
+        this.mappingEditor.getSession().setAnnotations([])
 
-        this.parser.yarrrml2RML(mappingStr)
-        .then(rml => {})
-        .catch(e => {
-            this.addMessage('error', e);
-        })
+        // validate yaml
+        try {
+            jsyaml.load(mappingStr)
+        } catch (error) {
+            this.mappingEditor.getSession().setAnnotations([{
+                row: error.mark.line,
+                column: error.mark.column,
+                text: error.reason,
+                type: 'error'
+            }])
+            return
+        }
+
+        // validate yarrrml to rml
+        this.currentYarrrmlValidationTimout = setTimeout(() => {
+            mappingStr = self.parser.yarrrmlExtend(mappingStr);
+            mappingStr = self.parser.yarrrmlEncodeBrackets(mappingStr);
+
+            self.parser.yarrrml2RML(mappingStr)
+            .catch(e => {
+                self.addMessage('error', e);
+            })
+        }, 1500)
     }
 
     loadExampleData(url = "", target = null) {
