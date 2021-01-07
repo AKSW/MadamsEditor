@@ -116,6 +116,7 @@ class MadamsEditor_UI {
         this.dataEditor = ace.edit("data-editor" ,{
             mode: "ace/mode/json",
             theme: "ace/theme/tomorrow",
+            wrap: true
         });
         if (this.config.dataUrl != "") {
             this.loadExampleData(this.config.dataUrl, this.dataEditor)
@@ -126,7 +127,8 @@ class MadamsEditor_UI {
         this.mappingEditor = ace.edit("mapping-editor", {
             mode: "ace/mode/yaml",
             theme: "ace/theme/tomorrow",
-            tabSize: 2
+            tabSize: 2,
+            wrap: true
         });
         this.mappingEditor.focus();
         this.mappingEditor.session.on("change", () => {
@@ -139,6 +141,7 @@ class MadamsEditor_UI {
         this.outEditor = ace.edit("out-editor", {
             mode: "ace/mode/turtle",
             theme: "ace/theme/tomorrow",
+            wrap: true
         });
     }
 
