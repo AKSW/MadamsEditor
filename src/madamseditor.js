@@ -102,12 +102,6 @@ class MadamsEditor_UI {
         this.parser = parent.parser;
 
         this.initEditors();
-        if (this.config.dataUrl != "") {
-            this.loadExampleData(this.config.dataUrl, this.dataEditor);
-        }
-        if (this.config.mappingUrl != "") {
-            this.loadExampleData(this.config.mappingUrl, this.mappingEditor);
-        }
 
         // init run btn event
         document.querySelector("#convert-btn").addEventListener("click", (e) => {
@@ -119,6 +113,16 @@ class MadamsEditor_UI {
     initEditors() {
         const self = this;
 
+        this.dataEditor = ace.edit("data-editor" ,{
+            mode: "ace/mode/json",
+            theme: "ace/theme/tomorrow",
+        });
+        if (this.config.dataUrl != "") {
+            this.loadExampleData(this.config.dataUrl, this.dataEditor)
+            .then(res => self.dataEditor.session.foldToLevel(4))
+            .catch(e => {})
+        }
+
         this.mappingEditor = ace.edit("mapping-editor", {
             mode: "ace/mode/yaml",
             theme: "ace/theme/tomorrow",
@@ -128,11 +132,9 @@ class MadamsEditor_UI {
         this.mappingEditor.session.on("change", () => {
             self.handleUpdateYarrmlEditor();
         });
-
-        this.dataEditor = ace.edit("data-editor" ,{
-            mode: "ace/mode/json",
-            theme: "ace/theme/tomorrow",
-        });
+        if (this.config.mappingUrl != "") {
+            this.loadExampleData(this.config.mappingUrl, this.mappingEditor);
+        }
 
         this.outEditor = ace.edit("out-editor", {
             mode: "ace/mode/turtle",
@@ -204,20 +206,24 @@ class MadamsEditor_UI {
     }
 
     loadExampleData(url = "", target = null) {
-        fetch(url)
-        .then(data => {
-            if (!data.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return data.text()
+        return new Promise((resolve, reject) => {
+            fetch(url)
+            .then(data => {
+                if (!data.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return data.text()
+            })
+            .then(text => {
+                target.setValue(text);
+                target.clearSelection();
+                resolve(true);
+            })
+            .catch(error => {
+                this.addMessage('error', 'Fetch example data failed. ' + error)
+                reject(error);
+            });
         })
-        .then(text => {
-            target.setValue(text);
-            target.clearSelection();
-        })
-        .catch(error => {
-            this.addMessage('error', 'Fetch example data failed. ' + error)
-        });
     }
 
     addMessage(type, ...message) {
