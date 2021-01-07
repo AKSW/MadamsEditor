@@ -27,9 +27,18 @@ app.options("/*", function(req, res, next){
 
 // routes
 app.get('/', (req, res) => {
-    res.send('Howdy, wrong route...');
+    res.send('Howdy!');
 });
 
+/**
+ * @api {post} /rmlmapper
+ * @apiName RML mapper
+ *
+ * @apiDescription Execute the RML mapper
+ * @apiParam {String} RML mapping
+ * @apiParam {String} Sources
+ * @apiSuccess
+ */
 app.post('/rmlmapper', async (req, res, next) => {
     req.accepts('application/json')
 
@@ -39,17 +48,12 @@ app.post('/rmlmapper', async (req, res, next) => {
         return res.status(500).send({ error: 'Parameter missing!' })
     }
 
-
     const options = {
         toRDF: true,
         verbose: false,
         xmlPerformanceMode: false,
         replace: false,
-        functions: {
-            'https://github.com/AKSW/MadamsEditor/functions.ttl#toUpperCase': function (str) {
-                return str[0].toUpperCase();
-            }
-        }
+        functions: predefinedFunctions()
     };
 
     try {
@@ -58,8 +62,20 @@ app.post('/rmlmapper', async (req, res, next) => {
     } catch (error) {
         res.status(500).send({ error: error.toString() });
     }
-
 })
+
+const predefinedFunctions = () => {
+    const namespace = 'https://github.com/AKSW/MadamsEditor/functions.ttl#';
+
+    const toUpperCase = ([str]) => str.toString().toUpperCase();
+
+    const toLowerCase = ([str]) => str.toString().toLowerCase();
+
+    return [toUpperCase, toLowerCase]
+        .reduce((o, cur) => {
+            return Object.assign(o, {[namespace + cur.name]: cur})
+        }, {});
+}
 
 app.listen(SERVER_PORT, HOST);
 console.log(`RML server http://${HOST}:${SERVER_PORT}`);
