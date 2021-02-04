@@ -6,6 +6,7 @@
   <meta content="utf-8" http-equiv="encoding">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+  <link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
   <style type="text/css" media="screen">
@@ -20,7 +21,7 @@
     }
 
     .container-fluid {
-
+      background: #905157;
     }
     .col {
       padding: 0!important;
@@ -50,30 +51,41 @@
       right: 0;
       z-index: 9999;
     } */
-    .btns-wrapper .btn {
-
+    #leftCol {
+      background: white;
     }
-    #data-wrapper {
-
+    #leftCol .editor-wrapper:nth-child(n+2) {
+      /* border-top: none; */
+      /* border-top: 10px solid #905157; */
     }
-    #mapping-wrapper {
-      border-top: none;
+    #rightCol {
+      background: white;
+    }
+    #rightCol > div {
+      /* border-left: none; */
     }
     .editor-wrapper {
-      border: 2px solid #859bb7;
+      /* border: 2px solid #859bb7; */
     }
-    #out-wrapper {
-      border-left: none;
+    .split, .gutter.gutter-horizontal {
+      /* float: left; */
+  }
+    .gutter.gutter-horizontal {
+        cursor: ew-resize;
+    }
+    .gutter.gutter-vertical {
+      cursor: ns-resize;
+      background: #905157;
     }
 </style>
 
-  <title>MaDaMs Editor</title>
+  <title>Madams Editor</title>
 </head>
 <body>
 
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="#">
-      <img src="../dist/assets/logo-header.png" height=40 alt="MADAMS EDITOR" loading="lazy">
+      <img src="/assets/logo-header.png" height=40 alt="MADAMS EDITOR" loading="lazy">
     </a>
 
     <a class="nav-link btn btn-primary" id="convert-btn" href="#">
@@ -122,18 +134,18 @@
       </div> -->
 
       <div class="row justify-content-center h-100 p-2">
-        <div id="leftCol" class="col col-6">
-          <div id="data-wrapper" class="editor-wrapper h-50">
-            <div class="editor-title">Data <small class="text-muted">(JSON)</small></div>
-            <div id="data-editor" class="editor"></div>
-          </div>
-
-          <div id="mapping-wrapper" class="editor-wrapper h-50">
+        <div id="leftCol" class="split">
+          <div id="mapping-wrapper" class="editor-wrapper  split">
             <div class="editor-title">YARRRML Mapping <small class="text-muted">(YAML)</small></div>
             <div id="mapping-editor" class="editor"></div>
           </div>
+
+          <div id="data-wrapper" class="editor-wrapper  split">
+            <div class="editor-title">Data <small class="text-muted">(JSON)</small></div>
+            <div id="data-editor" class="editor"></div>
+          </div>
         </div>
-        <div id="rightCol" class="col col-6">
+        <div id="rightCol" class="split">
 
           <div id="out-wrapper" class="editor-wrapper h-100">
             <div class="editor-title">Result <small class="text-muted">(Turtle)</small></div>
@@ -155,12 +167,14 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js"></script>
+
 <script id="js-entrypoint" src="app.js"></script>
 <script type="text/javascript">
   let options = {};
   if (process.env.NODE_ENV === 'development') {
       options = {
-          'dataUrl':      './dist/example-material-data.json',
+          'dataUrl':      './dist/example-data.json',
           'mappingUrl':   './dist/example-mapping.yml',
           'rmlMapperUrl': 'http://localhost:3000/rmlmapper'
       }
@@ -172,6 +186,5 @@
       }
   }
   new MadamsEditor(options);
-</script>
 </script>
 </html>

@@ -116,19 +116,15 @@ class MadamsEditor_UI {
         this.dataEditor = ace.edit("data-editor" ,{
             mode: "ace/mode/json",
             theme: "ace/theme/tomorrow",
-            wrap: true
         });
         if (this.config.dataUrl != "") {
             this.loadExampleData(this.config.dataUrl, this.dataEditor)
-            .then(res => self.dataEditor.session.foldToLevel(4))
-            .catch(e => {})
         }
 
         this.mappingEditor = ace.edit("mapping-editor", {
             mode: "ace/mode/yaml",
             theme: "ace/theme/tomorrow",
             tabSize: 2,
-            wrap: true
         });
         this.mappingEditor.focus();
         this.mappingEditor.session.on("change", () => {
@@ -141,11 +137,16 @@ class MadamsEditor_UI {
         this.outEditor = ace.edit("out-editor", {
             mode: "ace/mode/turtle",
             theme: "ace/theme/tomorrow",
-            wrap: true
+        });
+
+        Split(['#leftCol', '#rightCol']);
+        Split(['#mapping-wrapper', '#data-wrapper'], {
+            direction: 'vertical',
         });
     }
 
     handleClickRunBtn(e) {
+        let result = false;
         const btn = e.target.closest("#convert-btn");
         btn.classList.add('disabled')
         btn.querySelector(".loader").classList.remove("d-none");
@@ -155,18 +156,18 @@ class MadamsEditor_UI {
         this.cleanupMessages();
 
         this.parser.runMapping()
-        .then(result => {
-            return this.parser.rdf2Turtle(result)
+        .then(res => {
+            return this.parser.rdf2Turtle(res)
         })
-        .then(result => {
-            result = result.replace(/\.\n([\w\<])/g, ".\n\n$1");
+        .then(res => {
+            result = res.replace(/\.\n([\w\<])/g, ".\n\n$1");
             this.outEditor.setValue(result);
             this.outEditor.clearSelection();
         })
         .catch(e => {
             this.addMessage('error', 'RML Mapper failed: ' + e);
         })
-        .finally(result => {
+        .finally(() => {
             btn.classList.remove('disabled')
             btn.querySelector(".loader").classList.add("d-none");
             btn.querySelector(".bi").classList.remove("d-none");
@@ -273,15 +274,14 @@ class MadamsEditor_Parser {
     runMapping() {
         const self = this;
         const inputData = this.ui.dataEditor.getValue();
-        let mappingStr = this.ui.mappingEditor.getValue();
-        mappingStr = this.yarrrmlExtend(mappingStr);
-        mappingStr = this.yarrrmlEncodeBrackets(mappingStr);
+        const mappingStr = this.getYarrrml();
 
         return new Promise((resolve, reject) => {
             this.yarrrml2RML(mappingStr)
             .then(rml => {
                 return fetch(self.config.rmlMapperUrl, {
                     method: "POST",
+                    // mode: 'no-cors',
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -315,6 +315,12 @@ class MadamsEditor_Parser {
         })
     }
 
+    getYarrrml() {
+        let mappingStr = this.ui.mappingEditor.getValue();
+        mappingStr = this.yarrrmlExtend(mappingStr);
+        mappingStr = this.yarrrmlEncodeBrackets(mappingStr);
+        return mappingStr;
+    }
 
     yarrrmlExtend(yarrrml) {
         // replace function
