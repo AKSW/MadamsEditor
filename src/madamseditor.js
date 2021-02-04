@@ -17,7 +17,8 @@ let _GLOBAL = {
         defaults: {
             dataUrl: 'example-data.json',
             mappingUrl: 'example-mapping.yml',
-            rmlMapperUrl: 'http://localhost:3000/rmlmapper'
+            rmlMapperUrl: 'http://localhost:3000/rmlmapper',
+            run: function(mapping, result) {}
         }
     },
     prefixes: {
@@ -139,6 +140,7 @@ class MadamsEditor_UI {
             theme: "ace/theme/tomorrow",
         });
 
+        // resizeable columns
         Split(['#leftCol', '#rightCol']);
         Split(['#mapping-wrapper', '#data-wrapper'], {
             direction: 'vertical',
@@ -172,6 +174,11 @@ class MadamsEditor_UI {
             btn.querySelector(".loader").classList.add("d-none");
             btn.querySelector(".bi").classList.remove("d-none");
             this.mappingEditor.focus();
+            this.config.run.call(
+                this,
+                result ? this.parser.getYarrrml() : false,
+                result ? result : false
+            );
         })
     }
 

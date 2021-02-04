@@ -45,33 +45,27 @@
       bottom: 0;
       z-index: 99;
     }
-    /* .btns-wrapper {
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      z-index: 9999;
-    } */
     #leftCol {
       background: white;
-    }
-    #leftCol .editor-wrapper:nth-child(n+2) {
-      /* border-top: none; */
-      /* border-top: 10px solid #905157; */
     }
     #rightCol {
       background: white;
     }
+    /* #leftCol .editor-wrapper:nth-child(n+2) {
+      border-top: none;
+      border-top: 10px solid #905157;
+    }
     #rightCol > div {
-      /* border-left: none; */
+      border-left: none;
     }
     .editor-wrapper {
-      /* border: 2px solid #859bb7; */
+      border: 2px solid #859bb7;
     }
     .split, .gutter.gutter-horizontal {
-      /* float: left; */
-  }
+      float: left;
+  } */
     .gutter.gutter-horizontal {
-        cursor: ew-resize;
+      cursor: ew-resize;
     }
     .gutter.gutter-vertical {
       cursor: ns-resize;
@@ -184,6 +178,10 @@
           'mappingUrl':   './example-material-mapping.yml',
           'rmlMapperUrl': 'https://ledot.de/rmlmapper'
       }
+  }
+  options.run = function(mapping, result) {
+    // the variable 'this' contains the MadamxsEditor class
+    console.log('Run', mapping, result);
   }
   new MadamsEditor(options);
 </script>
