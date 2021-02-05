@@ -82,7 +82,7 @@
       <img src="/assets/logo-header.png" height=40 alt="MADAMS EDITOR" loading="lazy">
     </a>
 
-    <a class="nav-link btn btn-primary" id="convert-btn" href="#">
+    <a class="nav-link btn btn-primary" id="convert-btn" href="#" title="Apply Mapping (Ctrl + Enter)">
               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-right-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
               </svg>
@@ -128,19 +128,18 @@
       </div> -->
 
       <div class="row justify-content-center h-100 p-2">
-        <div id="leftCol" class="split">
-          <div id="mapping-wrapper" class="editor-wrapper  split">
+        <div id="leftCol" class="col split">
+          <div id="mapping-wrapper" class="editor-wrapper h-50 split">
             <div class="editor-title">YARRRML Mapping <small class="text-muted">(YAML)</small></div>
             <div id="mapping-editor" class="editor"></div>
           </div>
 
-          <div id="data-wrapper" class="editor-wrapper  split">
+          <div id="data-wrapper" class="editor-wrapper h-50 split">
             <div class="editor-title">Data <small class="text-muted">(JSON)</small></div>
             <div id="data-editor" class="editor"></div>
           </div>
         </div>
-        <div id="rightCol" class="split">
-
+        <div id="rightCol" class="col split">
           <div id="out-wrapper" class="editor-wrapper h-100">
             <div class="editor-title">Result <small class="text-muted">(Turtle)</small></div>
             <div id="out-editor" class="editor"></div>

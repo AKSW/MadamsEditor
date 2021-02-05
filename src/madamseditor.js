@@ -101,6 +101,7 @@ class MadamsEditor_UI {
     init(parent) {
         this.config = parent.config;
         this.parser = parent.parser;
+        const self = this;
 
         this.initEditors();
 
@@ -109,6 +110,12 @@ class MadamsEditor_UI {
             this.handleClickRunBtn(e);
             e.preventDefault();
         })
+
+        document.addEventListener('keydown', function (e) {
+            if (e.code == 'Enter' && e.ctrlKey) {
+                self.handleClickRunBtn();
+            }
+        });
     }
 
     initEditors() {
@@ -145,11 +152,16 @@ class MadamsEditor_UI {
         Split(['#mapping-wrapper', '#data-wrapper'], {
             direction: 'vertical',
         });
+        // fix remove initial col/h-50 style to enable resizeable
+        document.querySelector("#leftCol").classList.remove('col');
+        document.querySelector("#rightCol").classList.remove('col');
+        document.querySelector("#mapping-wrapper").classList.remove('h-50');
+        document.querySelector("#data-wrapper").classList.remove('h-50');
     }
 
     handleClickRunBtn(e) {
         let result = false;
-        const btn = e.target.closest("#convert-btn");
+        const btn = document.querySelector("#convert-btn");
         btn.classList.add('disabled')
         btn.querySelector(".loader").classList.remove("d-none");
         btn.querySelector(".bi").classList.add("d-none");
