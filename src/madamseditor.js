@@ -11,6 +11,8 @@ import 'ace-builds/src-min-noconflict/mode-json'
 // load workers from CDN, keeps our public/dist clean...
 ace.config.set('workerPath', 'https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-min-noconflict');
 
+import Split from 'split.js'
+
 let _GLOBAL = {
     instance: null,
     config: {
@@ -148,9 +150,12 @@ class MadamsEditor_UI {
         });
 
         // resizeable columns
-        Split(['#leftCol', '#rightCol']);
+        Split(['#leftCol', '#rightCol'], {
+            gutterSize: 5
+        });
         Split(['#mapping-wrapper', '#data-wrapper'], {
             direction: 'vertical',
+            gutterSize: 5
         });
         // fix remove initial col/h-50 style to enable resizeable
         document.querySelector("#leftCol").classList.remove('col');
