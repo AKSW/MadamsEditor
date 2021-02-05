@@ -1,8 +1,10 @@
 # MaDaMs Editor (**Ma**terial **Da**ta **M**apping)
 
-(yet simple) Text based editor to map JSON data with [YARRRML](http://rml.io/yarrrml/) (a readible form of RDF Mapping Language [[RML](https://rml.io/specs/rml/)]) to RDF. Demo available [here](https://aksw.github.io/MadamsEditor/dist/).
+(yet simple) Text based editor to map JSON data with [YARRRML](http://rml.io/yarrrml/) (a human-readible form of RDF Mapping Language [[RML](https://rml.io/specs/rml/)]) to RDF. Demo available [here](https://aksw.github.io/MadamsEditor/dist/).
 
-The mapper is based on [YARRRML-Parser](https://github.com/RMLio/yarrrml-parser) and [RocketRML](https://github.com/semantifyit/RocketRML).
+The RML to YARRRML is based on [YARRRML-Parser](https://github.com/RMLio/yarrrml-parser).
+
+To apply the mappings on the data an RML Mapper service is **required**. We use the Node JavaScript library [RocketRML](https://github.com/semantifyit/RocketRML) for this.
 
 ## Screenshot
 
