@@ -9,10 +9,8 @@ prefixes:
   metadata: https://nomad-coe.eu/metadata/
   dcat: http://www.w3.org/ns/dcat#
   oboe: http://ecoinformatics.org/oboe/oboe.1.2/oboe-core.owl#
-  grel: http://users.ugent.be/~bjdmeest/function/grel.ttl#
-
+  mefx: https://github.com/AKSW/MadamsEditor/functions.ttl#
 mappings:
-
   runs:
     sources:
       - ['example-material-data.json~jsonpath', '$']

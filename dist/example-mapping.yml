@@ -1,9 +1,10 @@
 prefixes:
   schema: "http://schema.org/"
-  fx: "https://github.com/AKSW/MadamsEditor/functions.ttl#"
+  mefx: "https://github.com/AKSW/MadamsEditor/functions.ttl#"
 mappings:
   person:
     sources:
+      # select only public persons
       - ['example-data.json~jsonpath', '$.persons[?(@.public)]']
     s: http://example.com/$(firstname)
     po:
@@ -11,6 +12,7 @@ mappings:
       - [schema:name, $(firstname)]
       - p: schema:language
         o:
-          - function: fx:toUpperCase
+          # use predefined function toUpperCase  from ./functions.ttl
+          - function: mefx:toUpperCase
             parameters:
               - [str1, $(speaks.*)]
