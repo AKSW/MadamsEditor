@@ -1,5 +1,37 @@
-# functions.ttl
+@prefix cc:      <http://creativecommons.org/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fno:     <https://w3id.org/function/ontology#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix mefx:    <https://github.com/AKSW/MadamsEditor/functions.ttl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix void:    <http://rdfs.org/ns/void#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 
 # toUpperCase
+mefx:toUpperCase
+    a           fno:Function ;
+    rdfs:label          "String to uppercase" ;
+    dcterms:description "Returns the input with all letters in upper case." ;
+    fno:expects ( mefx:stringParameter ) ;
+    fno:returns ( mefx:stringOut ) .
 
 # toLowerCase
+mefx:toLowerCase
+    a           fno:Function ;
+    rdfs:label          "String to lowercase" ;
+    dcterms:description "Returns the input with all letters in lower case." ;
+    fno:expects ( mefx:stringParameter ) ;
+    fno:returns ( mefx:stringOut ) .
+
+mefx:stringParameter
+    a             fno:Parameter ;
+    fno:predicate mefx:valueParameter ;
+    fno:type:     xsd:string ;
+    fno:required  "true"^^xsd:boolean .
+
+mefx:stringOut
+    a             fno:Output ;
+    fno:name      "Output string" ;
+    fno:predicate mefx:stringOutput ;
+    fno:type      xsd:string .
