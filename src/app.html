@@ -203,19 +203,33 @@
   let options = {};
   if (process.env.NODE_ENV === 'development') {
     options = {
-      'dataUrl': './dist/example-data.json',
-      'mappingUrl': './dist/example-mapping.yml',
+      'data': {
+        'type': 'url' , // url|json
+        'value': './dist/example-data.json', // string|json
+        // 'name': '' // string (required for json)
+      },
+      'mapping': {
+        'type': 'url' , // url|yaml
+        'value': './dist/example-mapping.yml', // string
+        //'name': '' // string (required for yaml)
+      },
       'rmlMapperUrl': 'http://localhost:3000/rmlmapper'
     }
   } else {
     options = {
-      'dataUrl': './example-material-data.json',
-      'mappingUrl': './example-material-mapping.yml',
+      'data': {
+        'type': 'url' ,
+        'value': './dist/example-material-data.json',
+      },
+      'mapping': {
+        'type': 'url' ,
+        'value': './dist/example-material-mapping.yml',
+      },
       'rmlMapperUrl': 'https://ledot.de/rmlmapper'
     }
   }
   options.run = function (mapping, result) {
-    // the variable 'this' contains the MadamxsEditor class
+    // the variable 'this' contains the MadamsEditor class
     console.log('Run', mapping, result);
   }
   new MadamsEditor(options);

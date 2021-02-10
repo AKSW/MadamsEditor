@@ -18,9 +18,18 @@ let _GLOBAL = {
     instance: null,
     config: {
         defaults: {
-            dataUrl: 'example-data.json',
-            mappingUrl: 'example-mapping.yml',
-            rmlMapperUrl: 'http://localhost:3000/rmlmapper',
+            data: {
+                type: '', // string, value: url|json
+                value: '', // string|json
+                name: '' // string
+            },
+            mapping: {
+                type: '', // string, value: url|yaml
+                value: '', // string
+                name: '' // string
+            },
+            rmlMapperUrl: '',
+            // callback
             run: function(mapping, result) {}
         }
     },
@@ -124,17 +133,16 @@ class MadamsEditor_UI {
 
     initEditors() {
         const self = this;
+        const data = this.config.data;
+        const mapping = this.config.mapping;
 
+        // init data editor
         this.dataEditor = ace.edit("data-editor" ,{
             mode: "ace/mode/json",
             theme: "ace/theme/tomorrow",
         });
-        if (this.config.dataUrl != "") {
-            this.config.dataFilename = this.config.dataUrl.substring(this.config.dataUrl.lastIndexOf('/')+1);
-            document.querySelector('#data-filename').textContent = this.config.dataFilename;
-            this.loadData(this.config.dataUrl, this.dataEditor)
-        }
 
+        // init mapping editor
         this.mappingEditor = ace.edit("mapping-editor", {
             mode: "ace/mode/yaml",
             theme: "ace/theme/tomorrow",
@@ -144,18 +152,54 @@ class MadamsEditor_UI {
         this.mappingEditor.session.on("change", () => {
             self.handleUpdateYarrmlEditor();
         });
-        if (this.config.mappingUrl != "") {
-            this.config.mappingFilename = this.config.mappingUrl.substring(this.config.mappingUrl.lastIndexOf('/')+1);
-            document.querySelector('#mapping-filename').textContent = this.config.mappingFilename;
-            this.loadData(this.config.mappingUrl, this.mappingEditor);
-        }
 
+        // init out teditor
         this.outEditor = ace.edit("out-editor", {
             mode: "ace/mode/turtle",
             theme: "ace/theme/tomorrow",
         });
 
-        // resizeable columns
+        // load initial data
+        if (!data.type) {
+            // do nothing
+        }
+        else if (data.type == 'json') {
+            this.editorSetValue(this.dataEditor, JSON.stringify(data.value, null, '\t'));
+        }
+        else if (data.type == 'url') {
+            this.loadData(data.value, this.dataEditor)
+            if (!data.name || data.name == "") {
+                data.name = data.value.substring(data.value.lastIndexOf('/')+1);
+            }
+        }
+        else {
+            this.addMessage('error', `Undefined data type "${data.type}`)
+        }
+        if (data.name && data.name != "") {
+            document.querySelector('#data-filename').textContent = data.name;
+        }
+
+        // load initial mapping
+        if (!mapping.type) {
+            // do nothing
+        }
+        else if (mapping.type == 'yaml') {
+            this.editorSetValue(this.mappingEditor, mapping.value);
+        }
+        else if (mapping.type == 'url') {
+            this.loadData(mapping.value, this.mappingEditor)
+            if (!mapping.name || mapping.name == "") {
+                mapping.name = mapping.value.substring(mapping.value.lastIndexOf('/')+1);
+            }
+        }
+        else {
+            this.addMessage('error', `Undefined mapping type "${mapping.type}`)
+        }
+        if (mapping.name && mapping.name != "") {
+            document.querySelector('#mapping-filename').textContent = mapping.name;
+        }
+
+        // init resizeable columns
         Split(['#leftCol', '#rightCol'], {
             gutterSize: 5
         });
@@ -178,7 +222,7 @@ class MadamsEditor_UI {
         btn.querySelector(".bi").classList.add("d-none");
 
         clearTimeout(this.currentYarrrmlValidationTimout)
-        this.cleanupMessages();
+        this.closeMessages();
 
         this.parser.runMapping()
         .then(res => {
@@ -186,8 +230,7 @@ class MadamsEditor_UI {
         })
         .then(res => {
             result = res.replace(/\.\n([\w\<])/g, ".\n\n$1");
-            this.outEditor.setValue(result);
-            this.outEditor.clearSelection();
+            this.editorSetValue(this.outEditor, result)
         })
         .catch(e => {
             this.addMessage('error', 'RML Mapper failed: ' + e);
@@ -210,7 +253,7 @@ class MadamsEditor_UI {
         this.currentYarrrmlValidationTimout = null;
 
         let mappingStr = this.mappingEditor.getValue();
-        this.cleanupMessages();
+        this.closeMessages();
         clearTimeout(this.currentYarrrmlValidationTimout);
         this.mappingEditor.getSession().setAnnotations([])
 
@@ -249,8 +292,7 @@ class MadamsEditor_UI {
                 return data.text()
             })
             .then(text => {
-                target.setValue(text);
-                target.clearSelection();
+                this.editorSetValue(target, text);
                 resolve(true);
             })
             .catch(error => {
@@ -260,11 +302,17 @@ class MadamsEditor_UI {
         })
     }
 
+    editorSetValue(target = null, text = '') {
+        if (!target) return;
+        target.setValue(text);
+        target.clearSelection();
+    }
+
     addMessage(type, ...message) {
         console.log(type, message);
         const wrapper = document.querySelector("#messages-wrapper");
         const closeBtn = $('<button type="button" class="close ml-2" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-        closeBtn.on('click', this.closeMessage)
+        closeBtn.on('click', this.closeMessages)
         const alertEl = $('<div class="alert" role="alert"></div>');
         alertEl.append(message.toString())
         alertEl.append(closeBtn)
@@ -288,12 +336,8 @@ class MadamsEditor_UI {
         })
     }
 
-    cleanupMessages() {
-        const wrapper = document.querySelector("#messages-wrapper");
-        wrapper.innerHTML = "";
-    }
-
-    closeMessage() {
+    closeMessages() {
+        document.querySelector("#messages-wrapper").innerHTML = "";
         document.querySelectorAll("#leftCol, .gutter-horizontal, #rightCol").forEach(el => {
             el.style.height = "";
         })
@@ -323,7 +367,7 @@ class MadamsEditor_Parser {
             this.yarrrml2RML(mappingStr)
             .then(rml => {
                 const sources = {};
-                sources[self.config.dataFilename] = inputData;
+                sources[self.config.data.name] = inputData;
                 return fetch(self.config.rmlMapperUrl, {
                     method: "POST",
                     // mode: 'no-cors',
