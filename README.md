@@ -40,6 +40,10 @@ The productive requires one server to deliver the HTML/Javascript app and a Node
 2) App: make content of `./dist/` public available
 3) Server: start mapping server with Docker `docker-compose up server` or directly with Node `node src/server.js`. To change default port (3000) edit file `.env`.
 
+### Usage
+
+See `./src/app.html` for usage example.
+
 # Ressources
 
 - [RML](https://rml.io/specs/rml/)
