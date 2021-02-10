@@ -11,6 +11,7 @@ import 'ace-builds/src-min-noconflict/mode-json'
 // load workers from CDN, keeps our public/dist clean...
 ace.config.set('workerPath', 'https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-min-noconflict');
 
+// resizeable columns
 import Split from 'split.js'
 
 let _GLOBAL = {
@@ -113,7 +114,8 @@ class MadamsEditor_UI {
             e.preventDefault();
         })
 
-        document.addEventListener('keydown', function (e) {
+        // ctrl+enter shortcut
+        document.addEventListener('keydown', (e) => {
             if (e.code == 'Enter' && e.ctrlKey) {
                 self.handleClickRunBtn();
             }
@@ -128,7 +130,9 @@ class MadamsEditor_UI {
             theme: "ace/theme/tomorrow",
         });
         if (this.config.dataUrl != "") {
-            this.loadExampleData(this.config.dataUrl, this.dataEditor)
+            this.config.dataFilename = this.config.dataUrl.substring(this.config.dataUrl.lastIndexOf('/')+1);
+            document.querySelector('#data-filename').textContent = this.config.dataFilename;
+            this.loadData(this.config.dataUrl, this.dataEditor)
         }
 
         this.mappingEditor = ace.edit("mapping-editor", {
@@ -141,7 +145,9 @@ class MadamsEditor_UI {
             self.handleUpdateYarrmlEditor();
         });
         if (this.config.mappingUrl != "") {
-            this.loadExampleData(this.config.mappingUrl, this.mappingEditor);
+            this.config.mappingFilename = this.config.mappingUrl.substring(this.config.mappingUrl.lastIndexOf('/')+1);
+            document.querySelector('#mapping-filename').textContent = this.config.mappingFilename;
+            this.loadData(this.config.mappingUrl, this.mappingEditor);
         }
 
         this.outEditor = ace.edit("out-editor", {
@@ -233,7 +239,7 @@ class MadamsEditor_UI {
         }, 1500)
     }
 
-    loadExampleData(url = "", target = null) {
+    loadData(url = "", target = null) {
         return new Promise((resolve, reject) => {
             fetch(url)
             .then(data => {
@@ -257,8 +263,11 @@ class MadamsEditor_UI {
     addMessage(type, ...message) {
         console.log(type, message);
         const wrapper = document.querySelector("#messages-wrapper");
-        const closeBtn = '<button type="button" class="close ml-2" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-        const alertEl = $('<div class="alert" role="alert">' + message.toString() + closeBtn + '</div>');
+        const closeBtn = $('<button type="button" class="close ml-2" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+        closeBtn.on('click', this.closeMessage)
+        const alertEl = $('<div class="alert" role="alert"></div>');
+        alertEl.append(message.toString())
+        alertEl.append(closeBtn)
 
         switch (type) {
             case 'error':
@@ -273,11 +282,21 @@ class MadamsEditor_UI {
                 break;
         }
         $(wrapper).append(alertEl)
+
+        document.querySelectorAll("#leftCol, .gutter-horizontal, #rightCol").forEach(el => {
+            el.style.height = "calc(100% - 52px)";
+        })
     }
 
     cleanupMessages() {
         const wrapper = document.querySelector("#messages-wrapper");
         wrapper.innerHTML = "";
+    }
+
+    closeMessage() {
+        document.querySelectorAll("#leftCol, .gutter-horizontal, #rightCol").forEach(el => {
+            el.style.height = "";
+        })
     }
 }
 
@@ -303,16 +322,15 @@ class MadamsEditor_Parser {
         return new Promise((resolve, reject) => {
             this.yarrrml2RML(mappingStr)
             .then(rml => {
+                const sources = {};
+                sources[self.config.dataFilename] = inputData;
                 return fetch(self.config.rmlMapperUrl, {
                     method: "POST",
                     // mode: 'no-cors',
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({
-                        rml: rml,
-                        sources: { 'data.json': inputData }
-                    })
+                    body: JSON.stringify({ rml, sources })
                 });
             })
             .then(response => {
