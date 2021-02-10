@@ -15,7 +15,7 @@ mappings:
 
   runs:
     sources:
-      - ['data.json~jsonpath', '$']
+      - ['example-material-data.json~jsonpath', '$']
     s:
       value: $(section_run[0])
       type: blank
