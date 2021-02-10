@@ -129,6 +129,12 @@ class MadamsEditor_UI {
                 self.handleClickRunBtn();
             }
         });
+
+        // close status bar
+        // document.querySelector("#statusBar-buttons .close").addEventListener("click", e => {
+        //     this.closeStatusBar();
+        //     e.preventDefault();
+        // })
     }
 
     initEditors() {
@@ -201,11 +207,18 @@ class MadamsEditor_UI {
 
         // init resizeable columns
         Split(['#leftCol', '#rightCol'], {
-            gutterSize: 5
+            gutterSize: 5,
+            onDragEnd: (sizes) => {
+                this.outEditor.resize();
+            }
         });
         Split(['#mapping-wrapper', '#data-wrapper'], {
             direction: 'vertical',
-            gutterSize: 5
+            gutterSize: 5,
+            onDragEnd: (sizes) => {
+                this.mappingEditor.resize();
+                this.dataEditor.resize();
+            }
         });
         // fix remove initial col/h-50 style to enable resizeable
         document.querySelector("#leftCol").classList.remove('col');
@@ -222,7 +235,6 @@ class MadamsEditor_UI {
         btn.querySelector(".bi").classList.add("d-none");
 
         clearTimeout(this.currentYarrrmlValidationTimout)
-        this.closeMessages();
 
         this.parser.runMapping()
         .then(res => {
@@ -231,6 +243,7 @@ class MadamsEditor_UI {
         .then(res => {
             result = res.replace(/\.\n([\w\<])/g, ".\n\n$1");
             this.editorSetValue(this.outEditor, result)
+            this.addMessage('success', 'RML mapping OK')
         })
         .catch(e => {
             this.addMessage('error', 'RML Mapper failed: ' + e);
@@ -239,7 +252,8 @@ class MadamsEditor_UI {
             btn.classList.remove('disabled')
             btn.querySelector(".loader").classList.add("d-none");
             btn.querySelector(".bi").classList.remove("d-none");
-            this.mappingEditor.focus();
+            this.mappingEditor.focus(); // TODO set to last focus
+            // call callback function
             this.config.run.call(
                 this,
                 result ? this.parser.getYarrrml() : false,
@@ -253,7 +267,6 @@ class MadamsEditor_UI {
         this.currentYarrrmlValidationTimout = null;
 
         let mappingStr = this.mappingEditor.getValue();
-        this.closeMessages();
         clearTimeout(this.currentYarrrmlValidationTimout);
         this.mappingEditor.getSession().setAnnotations([])
 
@@ -309,38 +322,55 @@ class MadamsEditor_UI {
     }
 
     addMessage(type, ...message) {
-        console.log(type, message);
+        const statusBar = document.querySelector("#statusBar");
         const wrapper = document.querySelector("#messages-wrapper");
-        const closeBtn = $('<button type="button" class="close ml-2" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-        closeBtn.on('click', this.closeMessages)
         const alertEl = $('<div class="alert" role="alert"></div>');
         alertEl.append(message.toString())
-        alertEl.append(closeBtn)
 
         switch (type) {
             case 'error':
                 alertEl.addClass('alert-danger')
                 break;
-
             case 'success':
                 alertEl.addClass('alert-success')
                 break;
-
+            case 'info':
+                alertEl.addClass('alert-info')
+                break;
+            case 'warning':
+                alertEl.addClass('alert-warning')
+                break;
             default:
                 break;
         }
-        $(wrapper).append(alertEl)
+        $(wrapper).append(alertEl);
 
-        document.querySelectorAll("#leftCol, .gutter-horizontal, #rightCol").forEach(el => {
-            el.style.height = "calc(100% - 52px)";
-        })
+        if (statusBar.classList.contains("invisible")) {
+            this.openStatusBar();
+        }
+        wrapper.scrollTop = wrapper.scrollHeight;
+        console.log(type, message);
     }
 
-    closeMessages() {
-        document.querySelector("#messages-wrapper").innerHTML = "";
+    openStatusBar() {
+        // TODO: may resizeable status bar: https://jsfiddle.net/ve5dhp0L/
+        document.querySelector("#statusBar").classList.remove("invisible");
+        document.querySelectorAll("#leftCol, .gutter-horizontal, #rightCol").forEach(el => {
+            el.style.height = "calc(100% - 24px)";
+        })
+        this.mappingEditor.resize();
+        this.dataEditor.resize();
+        this.outEditor.resize();
+    }
+
+    closeStatusBar() {
+        document.querySelector("#statusBar").classList.add("invisible");
         document.querySelectorAll("#leftCol, .gutter-horizontal, #rightCol").forEach(el => {
             el.style.height = "";
         })
+        this.mappingEditor.resize();
+        this.dataEditor.resize();
+        this.outEditor.resize();
     }
 }
 

@@ -50,18 +50,36 @@
       height: calc(100% - 25px);
     }
 
-    #messages-wrapper {
+    #statusBar {
+      height: 32px;
+      padding: 0 8px 8px 8px;
       position: fixed;
       bottom: 0;
       z-index: 99;
       width: 100%;
-      padding: 0 8px;
+    }
+
+    #statusBar-buttons {
+      position: absolute;
+      right: 30px;
+      z-index: 1;
+    }
+
+    #messages-wrapper {
+      background: white;
+      width: 100%;
+      height: 100%;
+      border-top: 1px solid #dcdcdc;
+      /* overflow-y: scroll; */
+      overflow: hidden;
     }
 
     #messages-wrapper .alert {
-      margin-bottom: 10px;
       border-radius: 0;
       border-top: 1px solid #dcdcdc;
+      margin: 0 0 -1px 0;
+      padding: 0 10px;
+      font-size: .9rem;
     }
 
     #leftCol {
@@ -125,27 +143,13 @@
 
   <main role="main" class="">
 
-    <div id="messages-wrapper">
+    <div id="statusBar" class="invisible">
+      <!-- <div id="statusBar-buttons"><button type="button" class="close ml-2" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div> -->
+      <div id="messages-wrapper"></div>
     </div>
 
+
     <div class="container-fluid h-100">
-
-      <!-- <div class="p-3 mb-2 bg-light">
-          <p class="h4">Load Nomad Archive Data</p>
-          <form class="form-inline">
-            <label class="mb-2" for="nomadDataUploadId">Upload ID:</label>
-            <input type="text" class="form-control mb-2 ml-2 mr-sm-2" id="nomadDataUploadId">
-
-            <label class="mb-2" for="nomadDataCalcId">Calc ID:</label>
-            <input type="text" class="form-control mb-2 ml-2 mr-sm-2" id="nomadDataCalcId">
-
-            <button type="submit" class="btn btn-primary mb-2" id="load-data">
-              <span class="loader spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-              Load
-            </button>
-          </form>
-
-      </div> -->
 
       <div class="row justify-content-center h-100 p-2">
 
@@ -183,9 +187,7 @@
             <div class="editor-title">Result <small class="text-muted">(Turtle)</small></div>
             <div id="out-editor" class="editor"></div>
           </div>
-
         </div>
-
       </div>
 
     </div>
