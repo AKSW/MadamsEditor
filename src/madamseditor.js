@@ -91,12 +91,19 @@ let _GLOBAL = {
 
 export default class MadamsEditor {
 
-    constructor(config) {
+    constructor(options = {}) {
         if (_GLOBAL.instance) {
             return _GLOBAL.instance;
         }
 
-        this.config = Object.assign(_GLOBAL.config, _GLOBAL.config.defaults, config);
+        this.config = Object.assign({},
+            _GLOBAL.config,
+            _GLOBAL.config.defaults,
+            options,
+            {data: Object.assign({}, _GLOBAL.config.defaults.data, typeof options.data !== 'undefined' ? options.data : {})},
+            {mapping: Object.assign({}, _GLOBAL.config.defaults.mapping, typeof options.mapping !== 'undefined' ? options.mapping : {})}
+            );
+
         console.log('Welcome to MadamsEditor. Config:', this.config);
 
         this.ui = new MadamsEditor_UI();
@@ -179,7 +186,7 @@ class MadamsEditor_UI {
             }
         }
         else {
-            this.addMessage('error', `Undefined data type "${data.type}`)
+            this.addMessage('error', `Undefined data type "${data.type}"`)
         }
         if (data.name && data.name != "") {
             document.querySelector('#data-filename').textContent = data.name;
@@ -199,7 +206,7 @@ class MadamsEditor_UI {
             }
         }
         else {
-            this.addMessage('error', `Undefined mapping type "${mapping.type}`)
+            this.addMessage('error', `Undefined mapping type "${mapping.type}"`)
         }
         if (mapping.name && mapping.name != "") {
             document.querySelector('#mapping-filename').textContent = mapping.name;
@@ -296,6 +303,9 @@ class MadamsEditor_UI {
     }
 
     loadData(url = "", target = null) {
+        if (url == "" ) {
+            return new Promise((resolve, reject) => { resolve(true) });
+        }
         return new Promise((resolve, reject) => {
             fetch(url)
             .then(data => {
@@ -322,33 +332,31 @@ class MadamsEditor_UI {
     }
 
     addMessage(type, ...message) {
-        const statusBar = document.querySelector("#statusBar");
-        const wrapper = document.querySelector("#messages-wrapper");
-        const alertEl = $('<div class="alert" role="alert"></div>');
-        alertEl.append(message.toString())
+        const alert = document.createElement("div");
+        alert.className = "alert";
+        alert.textContent = message.toString();
 
         switch (type) {
             case 'error':
-                alertEl.addClass('alert-danger')
+                alert.classList.add('alert-danger');
                 break;
             case 'success':
-                alertEl.addClass('alert-success')
+                alert.classList.add('alert-success');
                 break;
             case 'info':
-                alertEl.addClass('alert-info')
+                alert.classList.add('alert-info');
                 break;
             case 'warning':
-                alertEl.addClass('alert-warning')
+                alert.classList.add('alert-warning');
                 break;
             default:
                 break;
         }
-        $(wrapper).append(alertEl);
+        document.querySelector("#messages-wrapper").innerHTML = alert.outerHTML;
 
-        if (statusBar.classList.contains("invisible")) {
+        if (document.querySelector("#statusBar").classList.contains("invisible")) {
             this.openStatusBar();
         }
-        wrapper.scrollTop = wrapper.scrollHeight;
         console.log(type, message);
     }
 
