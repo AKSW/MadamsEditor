@@ -44,6 +44,29 @@ The productive requires one server to deliver the HTML/Javascript app and a Node
 
 See `./src/app.html` for usage example.
 
+Usage as library:
+
+```js
+new MadamsEditor({
+    // JSON DATA: url to a json ressource or JSON object as value
+    'data': {
+        'type': 'url' ,  // url|json
+        'value': './dist/example-data.json',  // string|json
+        'name': '' // string (required for json)
+    },
+    // MAPPING: url to yaml (yarrrml) ressource, or yaml (yarrrml) as string
+    'mapping': {
+        'type': 'url' , // url|yaml
+        'value': './dist/example-mapping.yml', // string
+        'name': '' // string (required for yaml)
+    },
+    // url to RML mapper service
+    'rmlMapperUrl': 'http://localhost:3000/rmlmapper',
+    // callback method after run
+    run: function(mapping, result) { }
+});
+```
+
 # Ressources
 
 - [RML](https://rml.io/specs/rml/)
