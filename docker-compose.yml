@@ -1,16 +1,19 @@
 version: "2"
 services:
+  # base node container
   base:
     image: node:12
     volumes:
       - .:/usr/src/app/
     working_dir: /usr/src/app/
 
+  # install npm packages
   install:
     extends:
       service: base
     command: npm i
 
+  # dev environment (with hmr): app and server
   dev:
     extends:
       service: base
@@ -24,6 +27,7 @@ services:
       - $APP_PORT_HMR:$APP_PORT_HMR
       - $SERVER_PORT:$SERVER_PORT
 
+  # dev environment (with hmr): server only
   dev-server:
     extends:
       service: base
@@ -33,6 +37,7 @@ services:
     ports:
       - $SERVER_PORT:$SERVER_PORT
 
+  # dev environment (with hmr): app only
   dev-app:
     extends:
       service: base
@@ -44,6 +49,7 @@ services:
       - $APP_PORT:$APP_PORT
       - $APP_PORT_HMR:$APP_PORT_HMR
 
+  # productive server
   server:
     extends:
       service: dev-server
@@ -51,11 +57,13 @@ services:
     environment:
       - SERVER_PORT=$SERVER_PORT
 
+  # productive app (without hmr)
   app:
     extends:
       service: dev-app
     command: npm run app
 
+  # build productive app and server
   build:
     extends:
       service: base
