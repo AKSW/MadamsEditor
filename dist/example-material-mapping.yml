@@ -23,7 +23,7 @@ mappings:
 
   dataset:
     sources:
-      - ['data.json~jsonpath', '$']
+      - ['example-material-data.json~jsonpath', '$']
     s: data:$(section_metadata.pid)
     po:
       - [a, mvc:Dataset]
@@ -34,7 +34,7 @@ mappings:
 
   measurement:
     sources:
-      - ['data.json~jsonpath', '$.section_run[*].section_system[?(@.is_representative)]']
+      - ['example-material-data.json~jsonpath', '$.section_run[*].section_system[?(@.is_representative)]']
     s: null
     po:
       - [a, oboe:Measurement]
@@ -51,7 +51,7 @@ mappings:
 
   measuredValue:
     sources:
-      - ['data.json~jsonpath', '$.section_run[*].section_system[?(@.is_representative)].atom_species[*]']
+      - ['example-material-data.json~jsonpath', '$.section_run[*].section_system[?(@.is_representative)].atom_species[*]']
     s: null
     po:
       - [a, oboe:MeasuredValue]
@@ -59,7 +59,7 @@ mappings:
 
   metadata:
     sources:
-      - ['data.json~jsonpath', '$']
+      - ['example-material-data.json~jsonpath', '$']
     s: metadata:$(section_metadata.pid)
     po:
       - [a, dcat:Dataset]
