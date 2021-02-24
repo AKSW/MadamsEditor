@@ -41,9 +41,21 @@
       color: #859bb7 !important
     }
 
+    .btn, .btn-sm {
+      border-radius: 0;
+    }
+
+    .dropdown-menu {
+      border-radius: 0;
+    }
+
     .editor-title {
       height: 25px;
       margin: 0 5px;
+    }
+
+    .editor-title .float-right {
+      margin-right: 13px;
     }
 
     .editor {
@@ -84,6 +96,11 @@
 
     #leftCol {
       background: white;
+    }
+
+    #leftCol .dropleft .dropdown-menu {
+      top: 100%;
+      right: -5px;
     }
 
     #rightCol {
@@ -196,6 +213,7 @@
 
 </body>
 
+<script src="dropdown.js"></script>
 <script id="js-entrypoint" src="app.js"></script>
 <script type="text/javascript">
   let options = {};
