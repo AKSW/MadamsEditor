@@ -2,6 +2,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser')
+const cors = require('cors');
 const rmlParser = require("rocketrml");
 
 // Constants
@@ -10,20 +11,24 @@ const HOST = '0.0.0.0';
 
 // App
 const app = express();
-// parse json
-app.use(bodyParser.json())
+const router = express.Router();
+
+app.use(cors());
+
 // set header
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'content-type');
-
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 })
-// option request
-app.options("/*", function(req, res, next){
-    return res.sendStatus(200);
-});
+
+// parse json
+app.use(express.json());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/', router);
 
 // routes
 app.get('/', (req, res) => {
